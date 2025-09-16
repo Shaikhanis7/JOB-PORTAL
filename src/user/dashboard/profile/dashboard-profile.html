@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Hive Dashboard</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <!-- Toastify JS -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: "#265DF5",
+            secondary: "#0CADF3",
+            darkblue: "#0A1A2F",
+            neutral: {
+              dark: "#0D1B2A",
+              mid: "#1B263B",
+              light: "#415A77",
+            },
+            success: "#28A745",
+            danger: "#DC3545",
+            baselight: "#F4F6FA",
+            white: "#FFFFFF",
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="flex h-screen overflow-hidden bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white 
+    w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] 
+    transform -translate-x-full lg:translate-x-0 lg:relative 
+    transition-transform duration-300 z-30 shadow-lg">
+    
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+        <i class="fas fa-home w-5 mr-2"></i> Profile
+      </a>
+      <a href="./jobs/index.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+        <i class="fas fa-briefcase w-5 mr-2"></i> Applications
+      </a>
+      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+        <i class="fas fa-users w-5 mr-2"></i> Saved jobs
+      </a>
+      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+        <i class="fas fa-cog w-5 mr-2"></i> Settings
+      </a>
+    </nav>
+    <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+      <button class="w-full flex items-center justify-center py-2 px-4 bg-danger hover:bg-red-600 rounded transition">
+        <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile -->
+  <div id="overlay" class="fixed top-16 left-0 right-0 bottom-0 bg-black opacity-50 hidden z-20 lg:hidden"></div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-neutral-dark shadow fixed top-0 left-0 right-0 z-40 h-16 w-full">
+      <div class="flex items-center justify-between h-full px-4">
+        <!-- Left -->
+        <div class="flex items-center space-x-3">
+          <button id="menu-toggle" class="lg:hidden rounded-md hover:bg-gray-200 dark:hover:bg-neutral-mid transition box-border">
+            <i id="menu-icon" class="fas fa-bars w-6 h-6 text-neutral-dark dark:text-white"></i>
+          </button>
+          <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white whitespace-nowrap">Job Hive</h2>
+        </div>
+        <!-- Right -->
+        <div class="flex items-center space-x-3">
+          <button id="dark-toggle" class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
+            <i class="fas fa-moon w-5 h-5 text-gray-700 dark:text-white"></i>
+          </button>
+          <button class="rounded-full overflow-hidden w-10 h-10 bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:ring-2 hover:ring-primary transition">
+            <i class="fas fa-user text-gray-700 dark:text-white"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-auto p-6 mt-16">
+      <div class="flex flex-col lg:flex-row gap-6">
+        
+        <!-- Inner Left Navigation -->
+        <aside class="w-full lg:w-1/4 bg-white dark:bg-neutral-mid rounded-lg shadow-md p-4 h-fit ">
+          <div class="flex flex-col items-center mb-6 ">
+            <div class="w-20 h-20 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xl font-bold text-gray-700 dark:text-white">
+              UN
+            </div>
+            <h3 class="mt-3 font-semibold text-gray-800 dark:text-white">Your Name</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-300">Add your designation</p>
+          </div>
+          <!-- Profile Completion -->
+          <div class="flex flex-col items-center mb-6">
+            <div class="relative w-16 h-16">
+              <svg class="w-16 h-16">
+                <circle cx="32" cy="32" r="30" stroke="#E5E7EB" stroke-width="4" fill="none"/>
+                <circle cx="32" cy="32" r="30" stroke="#265DF5" stroke-width="4" fill="none" stroke-dasharray="188" stroke-dashoffset="188"/>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-sm font-semibold">0%</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">
+              Profile Completion <br> Complete your profile to unlock more opportunities
+            </p>
+          </div>
+          <!-- Navigation Links -->
+          <nav class="space-y-2">
+            <button data-tab="personalDetails" class="w-full flex items-center px-3 py-2 rounded-md bg-primary text-white">
+              <i class="fas fa-user mr-2"></i> Personal Details
+            </button>
+            <button data-tab="profileSummary" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-light transition">
+              <i class="fas fa-align-left mr-2"></i> Profile Summary
+            </button>
+            <button data-tab="educationDetails" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-light transition">
+              <i class="fas fa-graduation-cap mr-2"></i> Education
+            </button>
+            <button data-tab="workExperience" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-light transition">
+              <i class="fas fa-briefcase mr-2"></i> Experience
+            </button>
+            <button data-tab="skillsSection" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-light transition">
+              <i class="fas fa-cogs mr-2"></i> Skills
+            </button>
+            <button  data-tab="resumeSection" class="w-full flex items-center px-3 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-neutral-light transition">
+              <i class="fas fa-file-alt mr-2"></i> Resume
+            </button>
+          </nav>
+        </aside>
+        <!-- Right Content -->
+       <section class="flex-1 bg-white dark:bg-neutral-mid rounded-lg shadow-md p-6">
+        <div id="personalDetails" class="tab-content">
+  <h2 class="text-lg font-semibold mb-4">Personal Details</h2>
+
+  <!-- Profile Photo -->
+  <div class="flex items-center mb-6">
+    <div id="avatar" class="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-lg font-semibold text-gray-700 dark:text-white mr-4">
+      UN
+    </div>
+    <div class="flex space-x-3">
+      <label for="uploadPic" class="cursor-pointer px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition">
+        <i class="fas fa-upload mr-2"></i> Upload Photo
+      </label>
+      <input type="file" id="uploadPic" accept="image/*" class="hidden">
+      <button id="removePic" class="px-4 py-2 bg-danger text-white rounded-md hover:bg-red-700 transition hidden">
+        <i class="fas fa-trash mr-2"></i> Remove
+      </button>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form id="profileForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Full Name *</label>
+      <input id="fullName" type="text" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid" placeholder="Enter your full name">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Email Address *</label>
+      <input id="email" type="email" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid" placeholder="your.email@company.com">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Mobile Number *</label>
+      <input id="mobile" type="tel" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid" placeholder="+1 (555) 123-4567">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Date of Birth</label>
+      <input id="dob" type="date" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid">
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium mb-1">Location/City *</label>
+      <input id="location" type="text" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid" placeholder="Enter your city">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Current Designation</label>
+      <input id="designation" type="text" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid" placeholder="e.g. Software Engineer">
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Department</label>
+      <select id="department" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid">
+        <option value="">Select department</option>
+        <option>Engineering</option>
+        <option>Design</option>
+        <option>Marketing</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Total Experience</label>
+      <select id="experience" class="w-full border rounded-md p-2 dark:bg-neutral-light dark:border-neutral-mid">
+        <option value="">Select experience</option>
+        <option>0-1 years</option>
+        <option>2-3 years</option>
+        <option>4+ years</option>
+      </select>
+    </div>
+  </form>
+
+  <!-- Save Button -->
+  <div class="mt-6 flex justify-end">
+    <button id="saveBtn" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+      <i class="fas fa-save mr-2"></i> Save Details
+    </button>
+  </div>
+  </div>
+
+  <div id="profileSummary" class="tab-content hidden">
+  <h2 class="text-lg font-semibold mb-4">Profile Summary</h2>
+  <label class="block text-sm font-medium mb-2">Professional Summary *</label>
+  <textarea id="summaryInput" 
+    class="w-full border rounded-md p-3 dark:bg-neutral-light dark:border-neutral-mid"
+    rows="5"
+    placeholder="Write a compelling professional summary..."></textarea>
+  <p id="summaryCount" class="text-sm text-gray-600 dark:text-gray-300 mt-2">0/500 characters</p>
+
+  <button id="saveSummary" 
+    class="mt-3 px-4 py-2 bg-primary text-white rounded hover:bg-blue-600 transition">
+    Save Summary
+  </button>
+
+  <div class="mt-4 p-4 border rounded-md bg-gray-50 dark:bg-neutral-light">
+    <h3 class="font-semibold mb-2">Tips for writing:</h3>
+    <ul class="list-disc list-inside text-sm space-y-1">
+      <li>Start with your job title and years of experience</li>
+      <li>Highlight your skills and expertise</li>
+      <li>Mention your key achievements</li>
+      <li>Include technologies/tools you know</li>
+      <li>State career objectives</li>
+    </ul>
+  </div>
+</div>
+<div id="educationDetails" class="tab-content hidden">
+  <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+    <i class="fas fa-graduation-cap"></i> Education Details
+  </h2>
+
+  <!-- Container for dynamic forms -->
+  <div id="educationContainer"></div>
+
+  <!-- Add Another Education -->
+  <button id="addEducationBtn"
+    class="w-full mt-3 px-4 py-2 border rounded-md flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-neutral-mid">
+    <i class="fas fa-plus"></i> Add Another Education
+  </button>
+
+  <!-- Save -->
+  <button id="saveEducationBtn"
+    class="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-blue-600 transition">
+    <i class="fas fa-save"></i> Save Education Details
+  </button>
+</div>
+
+
+<div id="workExperience" class="tab-content hidden">
+  <h2 class="text-lg font-semibold mb-4">Work Experience</h2>
+
+  <div id="experienceContainer" class="space-y-4"></div>
+
+  <div class="flex justify-between items-center mt-4">
+    <button id="addExperience" class="flex items-center text-primary hover:text-blue-700 transition">
+      <i class="fas fa-plus mr-2"></i> Add Another Experience
+    </button>
+    <button id="saveExperience" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition">
+      <i class="fas fa-save mr-2"></i> Save Experience Details
+    </button>
+  </div>
+</div>
+
+<div id="resumeSection" class="hidden tab-content">
+<form id="resumeForm" class="space-y-4">
+  <label for="resumeUpload" class="block font-medium text-gray-700 dark:text-gray-300">
+    Upload Resume
+  </label>
+  <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" class="block w-full" />
+
+  <p id="resumeStatus" class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+    No resume uploaded yet.
+  </p>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="submit" 
+            class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700">
+      Save Resume
+    </button>
+
+    <!-- Download -->
+    <a id="downloadResume" href="#" download 
+       class="hidden px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+      <i class="fas fa-download mr-2"></i> Download
+    </a>
+
+    <!-- Preview -->
+    <button type="button" id="previewResume" 
+            class="hidden px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+      <i class="fas fa-eye mr-2"></i> Preview
+    </button>
+
+    <!-- Remove -->
+    <button type="button" id="removeResume" 
+            class="hidden px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+      <i class="fas fa-trash mr-2"></i> Remove
+    </button>
+  </div>
+</form>
+
+
+
+</section>
+
+      </div>
+    </main>
+  </div>
+  <!-- Custom JS -->
+  <script src="script.js"></script>
+</body>
+</html>

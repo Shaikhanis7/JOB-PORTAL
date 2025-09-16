@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: "#265DF5",
+            secondary: "#0CADF3",
+            darkblue: "#0A1A2F",
+            neutral: {
+              dark: "#0D1B2A",
+              mid: "#1B263B",
+              light: "#415A77",
+            },
+            success: "#28A745",
+            danger: "#DC3545",
+            baselight: "#F4F6FA",
+            white: "#FFFFFF",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="bg-baselight dark:bg-neutral-dark text-darkblue dark:text-white transition-colors duration-500 overflow-x-hidden">
+
+  <!-- Mobile Overlay Menu -->
+  <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-50 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+    <div id="mobile-menu-content" class="bg-white dark:bg-neutral-mid w-64 h-full p-6 space-y-6 transform -translate-x-full transition-transform duration-300">
+      <button id="close-menu" class="text-darkblue dark:text-white text-xl"><i class="fas fa-times"></i></button>
+      <ul class="space-y-4 font-medium">
+        <li class="hover:text-primary cursor-pointer mobile-link">Home</li>
+        <li class="hover:text-primary cursor-pointer mobile-link">Jobs</li>
+        <li class="hover:text-primary cursor-pointer mobile-link">Dashboard</li>
+        <li class="hover:text-primary cursor-pointer mobile-link">Contact Us</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="bg-white dark:bg-darkblue shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-40 transition-colors duration-500">
+    <!-- Left: Logo + Hamburger -->
+    <div class="flex items-center space-x-2">
+      <button id="hamburger" class="md:hidden text-xl text-darkblue dark:text-white"><i class="fas fa-bars"></i></button>
+      <span class="text-2xl font-bold text-primary dark:text-white">Job Portal</span>
+    </div>
+
+    <!-- Center: Links (hidden on mobile) -->
+    <ul class="hidden md:flex space-x-6 font-medium">
+      <li class="hover:text-primary cursor-pointer">Home</li>
+      <li class="hover:text-primary cursor-pointer">Jobs</li>
+      <li class="hover:text-primary cursor-pointer">Dashboard</li>
+      <li class="hover:text-primary cursor-pointer">Contact Us</li>
+    </ul>
+
+    <!-- Right: Buttons (visible on both desktop + mobile) -->
+    <div class="flex items-center space-x-2">
+      <button class="px-4 py-1 border border-neutral-light rounded text-darkblue dark:text-white">Sign In</button>
+      <button id="sign-in-btn" class="px-4 py-1 bg-primary text-white rounded hover:bg-secondary transition">Login</button>
+      <!-- Moon Button -->
+      <button id="dark-toggle" class="rounded-md p-2 hover:bg-neutral-light dark:hover:bg-neutral-mid transition">
+        <i class="fas fa-moon w-5 h-5 text-darkblue dark:text-white"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="px-6 py-8">
+    <h1 class="text-4xl font-bold mb-2">Find your job today</h1>
+    <p class="text-neutral-light dark:text-gray-300 mb-6">Search for your required job and join us.</p>
+    <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+  <input 
+    type="text" 
+    id="job-search"             
+    placeholder="Enter Keyword / title of the Job" 
+    class="flex-1 p-3 rounded border border-neutral-light dark:border-neutral-mid bg-white dark:bg-neutral-mid text-darkblue dark:text-white transition-colors duration-500 mb-3 md:mb-0"
+  >
+  <button 
+    id="job-search-btn"          
+    class="bg-primary text-white px-6 py-3 rounded hover:bg-secondary transition-transform duration-300"
+  >
+    Search job
+  </button>
+</div>
+
+  </header>
+
+  <!-- Main Content -->
+  <div class="px-6 md:flex md:space-x-6">
+    <!-- Filters -->
+    <aside class="md:w-1/4 mb-6 md:mb-0">
+  <div class="bg-white dark:bg-neutral-mid p-4 rounded shadow-md sticky top-28 space-y-4 transition-colors duration-500">
+    <h2 class="font-semibold mb-2">Filters</h2>
+
+    <!-- Type of Job -->
+    <div>
+      <h3 class="font-medium mb-2">Type of Job</h3>
+      <div class="space-y-1">
+        <label class="flex items-center space-x-2"><input type="checkbox" value="Full-time" class="filter-checkbox"><span>Full-time</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" value="Internship" class="filter-checkbox"><span>Internship</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" value="Part-time" class="filter-checkbox"><span>Part-time</span></label>
+      </div>
+    </div>
+
+    <!-- Job Category -->
+    <div>
+      <div>
+  <h3 class="font-medium mb-2">Job Category</h3>
+  <div id="category-container" class="space-y-1"></div>
+</div>
+
+    </div>
+
+    <!-- Location Filter -->
+   <div>
+  <h3 class="font-medium mb-2">Location</h3>
+
+  <!-- Search box for locations -->
+  <input 
+    type="text" 
+    id="location-search" 
+    placeholder="Search location..." 
+    class="w-full p-2 mb-3 rounded border border-neutral-light dark:border-neutral-mid bg-white dark:bg-neutral-mid text-darkblue dark:text-white transition-colors duration-500"
+  >
+
+  <!-- Location checkboxes will be injected here -->
+  <div id="location-options" class="space-y-1"></div>
+</div>
+
+
+
+  </div>
+</aside>
+
+
+    <!-- Job Listings -->
+    <section class="md:flex-1 space-y-4">
+      <div id="job-list"></div>
+    </section>
+  </div>
+<!-- Apply Modal -->
+<div id="apply-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div id="apply-modal-content" class="bg-white dark:bg-neutral-mid w-full max-w-2xl rounded-xl shadow-lg p-6 relative transform scale-95 transition-transform duration-300 overflow-y-auto max-h-[90vh]">
+
+    <!-- Close Button -->
+    <button id="close-apply-modal" class="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <h2 class="text-2xl font-bold text-darkblue dark:text-white mb-2">Job Application</h2>
+    <p class="text-sm text-gray-500 dark:text-gray-300 mb-6">Fill out the application in steps.</p>
+
+    <form id="application-form" class="space-y-6">
+
+      <!-- Step 1: Personal Info -->
+      <div class="step step-1 space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <input id="app-name" type="text" placeholder="Full Name" class="w-full p-2 border rounded-md"/>
+            <p id="error-name" class="text-red-500 text-sm mt-1"></p>
+          </div>
+          <div>
+            <input id="app-email" type="email" placeholder="Email" class="w-full p-2 border rounded-md"/>
+            <p id="error-email" class="text-red-500 text-sm mt-1"></p>
+          </div>
+          <div>
+            <input id="app-phone" type="tel" placeholder="Phone" class="w-full p-2 border rounded-md"/>
+            <p id="error-phone" class="text-red-500 text-sm mt-1"></p>
+          </div>
+          <div>
+            <input id="app-experience" type="text" placeholder="Experience" class="w-full p-2 border rounded-md"/>
+            <p id="error-experience" class="text-red-500 text-sm mt-1"></p>
+          </div>
+          <div>
+            <select id="app-education" class="w-full p-2 border rounded-md">
+              <option value="">Select Education</option>
+              <option value="High School">High School</option>
+              <option value="Diploma">Diploma</option>
+              <option value="Bachelor's">Bachelor's</option>
+              <option value="Master's">Master's</option>
+              <option value="PhD">PhD</option>
+            </select>
+            <p id="error-education" class="text-red-500 text-sm mt-1"></p>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" class="next-step px-6 py-2 bg-primary text-white rounded">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Skills -->
+      <div class="step step-2 space-y-4 hidden">
+        <div>
+          <label>Select Skills:</label>
+          <div id="skills-container" class="flex flex-wrap gap-2">
+            <label><input type="checkbox" value="JavaScript"> JS</label>
+            <label><input type="checkbox" value="React"> React</label>
+            <label><input type="checkbox" value="Node.js"> Node</label>
+          </div>
+          <p id="error-skills" class="text-red-500 text-sm mt-1"></p>
+        </div>
+        <div class="flex justify-between">
+          <button type="button" class="prev-step px-6 py-2 border rounded">Previous</button>
+          <button type="button" class="next-step px-6 py-2 bg-primary text-white rounded">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Resume -->
+      <div class="step step-3 space-y-4 hidden">
+        <input id="app-resume" type="file" class="w-full p-2 border rounded-md"/>
+        <div id="resume-preview" class="mt-1"></div>
+        <p id="error-resume" class="text-red-500 text-sm mt-1"></p>
+        <div class="flex justify-between">
+          <button type="button" class="prev-step px-6 py-2 border rounded">Previous</button>
+          <button type="submit" class="px-6 py-2 bg-primary text-white rounded">Submit</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
+
+   <script src="./script.js"></script>
+
+</body>
+</html>
