@@ -29,9 +29,6 @@ document.getElementById('dark-toggle').addEventListener('click', () => {
   document.documentElement.classList.toggle('dark'); // Toggle Tailwind's dark mode
 });
 
-// ==========================
-// Filter Dropdown
-// ==========================
 
 
 
@@ -56,50 +53,20 @@ cancelJobBtn.addEventListener("click", () => {
   renderSkills();
 });
 
-// Handle job form submission
-createJobForm.addEventListener("submit", (e) => {
-  e.preventDefault();
 
-  const now = new Date().toISOString();
-
-  // Build Job object
-  const job = {
-    id: Date.now().toString(),
-    title: document.getElementById("job-title").value,
-    description: document.getElementById("job-description").value,
-    category: document.getElementById("job-category").value,
-    skills: skills,
-    responsibilities: document.getElementById("job-responsibilities").value,
-    location: document.getElementById("job-location").value,
-    jobType: document.getElementById("job-type").value,
-    rounds: document.getElementById("job-rounds").value,
-    positions: document.getElementById("job-positions").value,
-    experience: document.getElementById("job-experience").value,
-    createdAt: now,
-    openedAt: now,
-    closedAt: null
-  };
-
-  // Save job in localStorage
-  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-  jobs.push(job);
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-
-  // Toastify notification
-  Toastify({
-    text: "Job created successfully",
-    duration: 3000,
-    close: true,
-    gravity: "bottom",
-    position: "right",
-    backgroundColor: "#28A745",
-  }).showToast();
-
-  // Reset form + hide
-  createJobForm.reset();
-  skills = [];
-  renderSkills();
-  jobForm.classList.add("hidden");
+createJobForm.querySelectorAll("input, select, textarea").forEach((input, i, arr) => {
+  input.addEventListener("keydown", (e) => {
+      if (input.id === "skill-input") return;  
+      if(input.id==="round-input") return;
+    if (e.key === "Enter") {
+      e.preventDefault(); 
+    if (i < arr.length - 1) {
+        arr[i + 1].focus();
+      } else {
+        createJobForm.requestSubmit();
+      }
+    }
+  });
 });
 
 // ==========================
@@ -109,10 +76,9 @@ const skillInput = document.getElementById("skill-input");
 const addSkillBtn = document.getElementById("add-skill-btn");
 const skillsContainer = document.getElementById("skills-container");
 
-// Local array to hold skills
 let skills = [];
 
-// Add skill when button clicked
+
 addSkillBtn.addEventListener("click", () => {
   const skill = skillInput.value.trim();
   if (skill && !skills.includes(skill)) {
@@ -201,7 +167,7 @@ function renderJobs(jobsToRender = null) {
           <div class="flex flex-wrap gap-2 mt-2">${skillTags}</div>
           <div class="flex flex-wrap gap-6 text-xs text-gray-500 dark:text-gray-300 mt-2">
             <span>Experience: ${job.experience || "-"}</span>
-            <span>Rounds: ${job.rounds || "-"}</span>
+            <span>Rounds: ${job.rounds.length || "-"}</span>
           </div>
 
           <div class="job-details max-h-0 overflow-hidden transition-all duration-500 mt-4 space-y-3 text-sm text-gray-700 dark:text-gray-200">
@@ -251,35 +217,6 @@ function renderJobs(jobsToRender = null) {
 
 
 
-
-// ==========================
-// Search Jobs (Check title/category/skills)
-// ==========================
-// searchBtn.addEventListener("click", () => {
-//   const keyword = keywordInput.value.trim().toLowerCase();
-//   const location = locationInput.value.trim().toLowerCase();
-
-//   const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-
-//   const filteredJobs = jobs.filter(job => {
-//     const titleMatch = job.title.toLowerCase().includes(keyword);
-//     const categoryMatch = job.category.toLowerCase().includes(keyword);
-
-//     // Skill match
-//     const skillsMatch = Array.isArray(job.skills)
-//       ? job.skills.some(skill => skill.toLowerCase().includes(keyword))
-//       : false;
-
-//     const locationMatch = job.location.toLowerCase().includes(location);
-
-//     return (titleMatch || categoryMatch || skillsMatch) && locationMatch;
-//   });
-
-//   // Render filtered jobs
-//   renderJobs(filteredJobs);
-// });
-
-
 function attachEventListeners() {
   document.querySelectorAll(".edit-job").forEach(btn =>
     btn.addEventListener("click", () => editJob(btn.dataset.id))
@@ -304,7 +241,37 @@ function timeAgo(dateStr) {
 
 renderJobs();
 
+function toggleJobStatus(id)
+{
+   const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+  const job = jobs.find(j => j.id === id);
 
+  if (job.closedAt) {
+    Toastify({
+      text: "Job cannot be reopened",
+      duration: 3000,
+      gravity: "bottom",
+      position: "right",
+      backgroundColor: "red",
+    }).showToast();
+  } else {
+    // Close the job
+    job.closedAt = new Date().toISOString();
+    Toastify({
+      text: "Job closed successfully",
+      duration: 3000,
+      gravity: "bottom",
+      position: "right",
+      backgroundColor: "#ffc107",
+    }).showToast();
+  }
+
+  // Save back to storage
+  localStorage.setItem("jobs", JSON.stringify(jobs));
+
+  // Refresh UI
+  renderJobs();
+}
 function deleteJob(id) {
   let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
   jobs = jobs.filter(job => job.id !== id);
@@ -320,14 +287,12 @@ function deleteJob(id) {
     backgroundColor: "#DC3545",
   }).showToast();
 }
-
-
 function editJob(id) {
   const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
   const job = jobs.find(j => j.id === id);
   if (!job) return;
 
-  // Remove existing edit forms if any
+  // Remove existing edit forms
   document.querySelectorAll(".edit-form-container").forEach(f => f.remove());
 
   // Find job card
@@ -340,7 +305,7 @@ function editJob(id) {
   editFormContainer.className = "edit-form-container mt-4 bg-white dark:bg-neutral-dark p-6 rounded-lg shadow-lg";
   jobCard.appendChild(editFormContainer);
 
-  // Form HTML (same style as Add Job form)
+  // Form HTML
   editFormContainer.innerHTML = `
     <h3 class="text-lg font-semibold mb-4">Edit Job</h3>
     <form class="grid grid-cols-1 md:grid-cols-2 gap-6 edit-job-form">
@@ -371,9 +336,22 @@ function editJob(id) {
           class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-28">${job.responsibilities}</textarea>
       </div>
       <div class="col-span-1">
-        <input type="text" name="location" value="${job.location}" placeholder="Location"
-          class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
-      </div>
+  <label class="block font-medium text-gray-700 dark:text-white mb-1">Location</label>
+  <div class="flex gap-2">
+    <select name="location" class="job-location-select flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white focus:ring-2 focus:ring-primary outline-none">
+      <!-- options will be populated dynamically -->
+    </select>
+    <button type="button" class="add-location-btn px-3 py-2 bg-secondary text-white rounded-lg hover:bg-blue-500 transition">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+  <!-- Hidden Add Location Input -->
+  <div class="new-location-box hidden mt-2 flex gap-2">
+    <input type="text" class="new-location-input flex-1 p-2 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none" placeholder="Enter new location"/>
+    <button type="button" class="save-location-btn px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">Save</button>
+  </div>
+</div>
+
       <div class="col-span-1">
         <select name="jobType"
           class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white focus:ring-2 focus:ring-primary outline-none">
@@ -382,9 +360,8 @@ function editJob(id) {
           <option value="Internship" ${job.jobType === "Internship" ? "selected" : ""}>Internship</option>
         </select>
       </div>
-      <div class="col-span-1">
-        <input type="text" name="rounds" value="${job.rounds}" placeholder="Rounds"
-          class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
+      <div class="col-span-1 md:col-span-2">
+        <div id="edit-rounds-container"></div>
       </div>
       <div class="col-span-1">
         <input type="number" name="positions" value="${job.positions}" placeholder="Positions"
@@ -401,7 +378,9 @@ function editJob(id) {
     </form>
   `;
 
-  // Skill handling
+  // ======================
+  // Skills handling
+  // ======================
   const skillsContainer = editFormContainer.querySelector(".skills-container");
   let editSkills = [...job.skills];
 
@@ -420,7 +399,6 @@ function editJob(id) {
   }
   renderEditSkills();
 
-  // Add skill button
   const addSkillBtn = editFormContainer.querySelector(".add-skill-btn");
   const skillInput = editFormContainer.querySelector(".skill-input");
   addSkillBtn.addEventListener("click", () => {
@@ -431,7 +409,7 @@ function editJob(id) {
       skillInput.value = "";
     }
   });
-  skillInput.addEventListener("keypress", (e) => {
+  skillInput.addEventListener("keypress", e => {
     if (e.key === "Enter") {
       e.preventDefault();
       addSkillBtn.click();
@@ -443,25 +421,136 @@ function editJob(id) {
     editFormContainer.remove();
   });
 
-  // Save changes
-  editFormContainer.querySelector(".edit-job-form").addEventListener("submit", (e) => {
+  // ======================
+  // Rounds handling
+  // ======================
+  const editRoundsContainerEl = editFormContainer.querySelector("#edit-rounds-container");
+  const roundInputWrapper = document.createElement("div");
+  roundInputWrapper.className = "mt-2";
+  roundInputWrapper.innerHTML = `
+    <div class="flex flex-col sm:flex-row gap-2">
+      <input type="number" id="edit-round-count" min="1" placeholder="No. of rounds"
+        class="flex-1 p-3 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none"/>
+      <button type="button" id="confirm-edit-round-count" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-600 transition w-full sm:w-auto">
+        Confirm
+      </button>
+    </div>
+   <div id="edit-round-input-area" class="hidden flex flex-col sm:flex-row gap-2 mt-2 items-center">
+  <input type="text" id="edit-round-input" placeholder="Enter round name"
+    class="flex-1 p-3 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none"/>
+  <button type="button" id="add-edit-round-btn" class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-blue-600 transition">
+    <i class="fas fa-plus"></i>
+  </button>
+  <p id="round-limit-msg" class="text-sm text-gray-500 dark:text-gray-400 mt-0 ml-3">You have reached the max rounds limit.</p>
+</div>
+
+  `;
+
+  // Append wrapper directly inside the rounds container
+  editRoundsContainerEl.appendChild(roundInputWrapper);
+
+  let editRounds = (JSON.parse(localStorage.getItem("rounds")) || []).filter(r => r.jobId === id);
+  let maxRounds = editRounds.length || 0;
+
+  function renderEditRounds() {
+    editRoundsContainerEl.innerHTML = "";
+    editRoundsContainerEl.appendChild(roundInputWrapper);
+    editRounds.sort((a,b) => a.sequence - b.sequence);
+    editRounds.forEach((r,index) => {
+      const chip = document.createElement("span");
+      chip.className = "inline-flex items-center px-3 py-1 bg-primary text-white rounded-full text-sm font-medium space-x-2 my-2";
+      chip.innerHTML = `
+        <span>${index + 1}. ${r.roundName}</span>
+        <button type="button" class="ml-2 hover:bg-red-600 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs">&times;</button>
+      `;
+      chip.querySelector("button").addEventListener("click", () => {
+        editRounds = editRounds.filter(er => er.roundId !== r.roundId);
+        maxRounds = editRounds.length;
+        renderEditRounds();
+      });
+      editRoundsContainerEl.appendChild(chip);
+    });
+
+    // Append the round input wrapper below chips
+    
+  }
+  renderEditRounds();
+
+  const editRoundCount = editFormContainer.querySelector("#edit-round-count");
+  const confirmEditRoundCount = editFormContainer.querySelector("#confirm-edit-round-count");
+  const editRoundInputArea = editFormContainer.querySelector("#edit-round-input-area");
+  const addEditRoundBtn = editFormContainer.querySelector("#add-edit-round-btn");
+  const editRoundInput = editFormContainer.querySelector("#edit-round-input");
+
+  confirmEditRoundCount.addEventListener("click", () => {
+    const val = parseInt(editRoundCount.value);
+    if(val > 0){
+      maxRounds = val;
+      editRoundInputArea.classList.remove("hidden");
+      editRoundInput.focus();
+      document.getElementById("round-limit-msg")?.remove();
+    }
+  });
+
+  addEditRoundBtn.addEventListener("click", () => {
+    const val = editRoundInput.value.trim();
+    if(!val) return;
+    if(editRounds.length >= maxRounds){
+      if(!document.getElementById("round-limit-msg")){
+        const msg = document.createElement("p");
+        msg.id = "round-limit-msg";
+        msg.className = "text-sm text-gray-500 dark:text-gray-400 mt-1";
+        msg.innerText = "You have reached the max rounds limit.";
+        editRoundInputArea.appendChild(msg);
+      }
+      return;
+    }
+    editRounds.push({
+      roundId:  Date.now(),
+      jobId: id,
+      roundName: val,
+      sequence: editRounds.length + 1
+    });
+    editRoundInput.value = "";
+    renderEditRounds();
+  });
+
+  editRoundInput.addEventListener("keypress", e => {
+    if(e.key === "Enter"){
+      e.preventDefault();
+      addEditRoundBtn.click();
+    }
+  });
+
+  // ======================
+  // Save Changes
+  // ======================
+  editFormContainer.querySelector(".edit-job-form").addEventListener("submit", e => {
     e.preventDefault();
     const formData = new FormData(e.target);
+
     job.title = formData.get("title");
     job.category = formData.get("category");
     job.description = formData.get("description");
     job.responsibilities = formData.get("responsibilities");
     job.location = formData.get("location");
     job.jobType = formData.get("jobType");
-    job.rounds = formData.get("rounds");
     job.positions = formData.get("positions");
     job.experience = formData.get("experience");
     job.skills = editSkills;
 
+    // Update rounds sequence & local storage
+    editRounds.forEach((r,index) => r.sequence = index+1);
+    let allRounds = JSON.parse(localStorage.getItem("rounds")) || [];
+    allRounds = allRounds.filter(r => r.jobId !== id).concat(editRounds);
+    localStorage.setItem("rounds", JSON.stringify(allRounds));
+
+    // Update job in localStorage
     const allJobs = JSON.parse(localStorage.getItem("jobs")) || [];
     const jobIndex = allJobs.findIndex(j => j.id === id);
     allJobs[jobIndex] = job;
     localStorage.setItem("jobs", JSON.stringify(allJobs));
+
     renderJobs();
 
     Toastify({
@@ -472,35 +561,10 @@ function editJob(id) {
       position: "right",
       backgroundColor: "#28A745",
     }).showToast();
+
+    editFormContainer.remove();
   });
 }
-
-
-function toggleJobStatus(jobId) {
-  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-
-  jobs = jobs.map(job => {
-    if (job.id === jobId) {
-      if (job.closedAt) {
-        // If job is closed, open it
-        job.closedAt = null;
-        job.openedAt = new Date().toISOString();
-      } else {
-        // If job is open, close it
-        job.closedAt = new Date().toISOString();
-      }
-    }
-    return job;
-  });
-
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-
-  // Re-render jobs to reflect changes
-  renderJobs();
-}
-
-
-
 
 
 
@@ -576,112 +640,256 @@ function filterAndRenderJobs() {
   renderJobs(jobs);
 }
 
+
+
+
+
+let tempRounds = [];
+
+  let roundLimit = 0;
+
+  const roundInput = document.getElementById("round-input");
+  const addRoundBtn = document.getElementById("add-round-btn");
+  const roundsContainer = document.getElementById("rounds-container");
+  const roundInputArea = document.getElementById("round-input-area");
+  const roundLimitMsg = document.getElementById("round-limit-msg");
+
+  // Confirm number of rounds
+  document.getElementById("confirm-round-count").addEventListener("click", () => {
+    const count = parseInt(document.getElementById("round-count").value);
+
+    if (isNaN(count) || count <= 0) {
+      alert("Please enter a valid number of rounds!");
+      return;
+    }
+
+    roundLimit = count;
+    tempRounds = []; // reset
+    roundsContainer.innerHTML = "";
+    roundInputArea.classList.remove("hidden");
+    roundLimitMsg.textContent = `You can add up to ${roundLimit} rounds.`;
+  });
+
+  // Add round (by button or Enter key)
+  function addRound() {
+    if (tempRounds.length >= roundLimit) {
+      roundLimitMsg.textContent = `You already added ${roundLimit} rounds.`;
+      return;
+    }
+
+    const roundName = roundInput.value.trim();
+    if (!roundName) return;
+
+    const roundId = Date.now().toString();
+
+    tempRounds.push({ roundId, roundName });
+
+    const chip = document.createElement("span");
+    chip.className =
+      "px-3 py-1 bg-primary text-white rounded-full text-sm flex items-center space-x-2";
+    chip.innerHTML = `${tempRounds.length}. ${roundName} 
+      <button type="button" class="ml-2 text-white hover:text-gray-200" data-id="${roundId}">&times;</button>`;
+
+    roundsContainer.appendChild(chip);
+    roundInput.value = "";
+  }
+
+  addRoundBtn.addEventListener("click", addRound);
+
+  // Enter key adds round
+  roundInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addRound();
+    }
+  });
+
+  // Remove round
+  roundsContainer.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      const roundId = e.target.getAttribute("data-id");
+      tempRounds = tempRounds.filter((r) => r.roundId !== roundId);
+      e.target.parentElement.remove();
+    }
+  });
+
+let rounds = JSON.parse(localStorage.getItem("rounds")) || [];
+
+  // Handle job form submission
+createJobForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const now = new Date().toISOString();
+
+  // Build Job object
+  const job = {
+    id: Date.now().toString(),
+    title: document.getElementById("job-title").value,
+    description: document.getElementById("job-description").value,
+    category: document.getElementById("job-category").value,
+    skills: skills,
+    responsibilities: document.getElementById("job-responsibilities").value,
+    location: document.getElementById("job-location").value,
+    jobType: document.getElementById("job-type").value,
+   rounds: tempRounds.map(r => r.roundId),
+    positions: document.getElementById("job-positions").value,
+    experience: document.getElementById("job-experience").value,
+    createdAt: now,
+    openedAt: now,
+    closedAt: null
+  };
+
+  // Save job in localStorage
+  let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+   tempRounds.forEach((r, index) => {
+      rounds.push({
+        roundId: r.roundId,
+        jobId:job.id,
+        roundName: r.roundName,
+        sequence: index + 1,
+      });
+    });
+
+  jobs.push(job);
+  localStorage.setItem("jobs", JSON.stringify(jobs));
+  localStorage.setItem("rounds", JSON.stringify(rounds));
+
+  // Toastify notification
+  Toastify({
+    text: "Job created successfully",
+    duration: 3000,
+    close: true,
+    gravity: "bottom",
+    position: "right",
+    backgroundColor: "#28A745",
+  }).showToast();
+
+  // Reset form + hide
+  createJobForm.reset();
+  skills = [];
+  renderSkills();
+  jobForm.classList.add("hidden");
+  tempRounds=[]
+});
+
+
 // ==========================
 // Initial render
 // ==========================
 filterAndRenderJobs();
 
-// =======================
-// Rounds Management
-// =======================
 
-// Storage
-let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-let rounds = JSON.parse(localStorage.getItem("rounds")) || [];
+// ==========================
+// Manage Locations
+// ==========================
+const locationSelect = document.getElementById("job-location");
+const addLocationBtn = document.getElementById("add-location-btn");
+const newLocationBox = document.getElementById("new-location-box");
+const newLocationInput = document.getElementById("new-location-input");
+const saveLocationBtn = document.getElementById("save-location-btn");
 
-// Temp storage for rounds before saving
-let tempRounds = [];
+// Default locations
+let defaultLocations = ["Chennai", "Coimbatore", "Bangalore", "Hyderabad"];
 
-// Add Round
-document.getElementById("add-round-btn").addEventListener("click", () => {
-  const roundInput = document.getElementById("round-input");
-  const roundName = roundInput.value.trim();
+// Load saved + default locations
+function loadLocations() {
+  let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
+  let allLocations = [...new Set([...defaultLocations, ...savedLocations])];
 
-  if (roundName) {
-    const roundId = "round_" + Date.now().toString();
+  locationSelect.innerHTML = `<option value="" disabled selected>Select Location</option>`;
+  allLocations.forEach(loc => {
+    let opt = document.createElement("option");
+    opt.value = loc;
+    opt.textContent = loc;
+    locationSelect.appendChild(opt);
+  });
+}
 
-    // Add to temp
-    tempRounds.push({ roundId, roundName });
+// Show input box for new location
+addLocationBtn.addEventListener("click", () => {
+  newLocationBox.classList.toggle("hidden");
+  newLocationInput.focus();
+});
 
-    // Render chip
-    const chip = document.createElement("span");
-    chip.className =
-      "px-3 py-1 bg-primary text-white rounded-full text-sm flex items-center space-x-2";
-    chip.innerHTML = `${roundName} 
-      <button type="button" class="ml-2 text-white hover:text-gray-200" data-id="${roundId}">&times;</button>`;
-
-    document.getElementById("rounds-container").appendChild(chip);
-
-    // Clear input
-    roundInput.value = "";
+// Save new location
+saveLocationBtn.addEventListener("click", () => {
+  let newLoc = newLocationInput.value.trim();
+  if (newLoc) {
+    let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
+    if (!savedLocations.includes(newLoc)) {
+      savedLocations.push(newLoc);
+      localStorage.setItem("locations", JSON.stringify(savedLocations));
+      Toastify({
+        text: `Location "${newLoc}" added successfully!`,
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "#28a745",
+      }).showToast();
+    }
+    newLocationInput.value = "";
+    newLocationBox.classList.add("hidden");
+    loadLocations();
+    locationSelect.value = newLoc; // auto-select new location
   }
 });
 
-// Remove Round
-document.getElementById("rounds-container").addEventListener("click", (e) => {
-  if (e.target.tagName === "BUTTON") {
-    const roundId = e.target.getAttribute("data-id");
-    tempRounds = tempRounds.filter((r) => r.roundId !== roundId);
-    e.target.parentElement.remove();
-  }
-});
+// Initialize dropdown
+loadLocations();
 
-// =======================
-// Job Form Submit
-// =======================
-document.getElementById("create-job-form").addEventListener("submit", function (e) {
-  e.preventDefault();
 
-  const jobId = "job_" + Date.now().toString();
-  const title = document.getElementById("job-title").value;
-  const category = document.getElementById("job-category").value;
-  const description = document.getElementById("job-description").value;
-  const location = document.getElementById("job-location").value;
-  const type = document.getElementById("job-type").value;
-  const positions = document.getElementById("job-positions").value;
-  const experience = document.getElementById("job-experience").value;
+function setupEditLocationDropdown(editForm, job) {
+  const locationSelect = editForm.querySelector(".job-location-select");
+  const addLocationBtn = editForm.querySelector(".add-location-btn");
+  const newLocationBox = editForm.querySelector(".new-location-box");
+  const newLocationInput = editForm.querySelector(".new-location-input");
+  const saveLocationBtn = editForm.querySelector(".save-location-btn");
 
-  // Create job object
-  const newJob = {
-    jobId,
-    title,
-    category,
-    description,
-    location,
-    type,
-    positions,
-    experience,
-    rounds: tempRounds.map(r => r.roundId), // only store round IDs
-  };
+  let defaultLocations = ["Chennai", "Coimbatore", "Bangalore", "Hyderabad"];
 
-  // Save rounds in global rounds array
-  tempRounds.forEach((r, index) => {
-    rounds.push({
-      roundId: r.roundId,
-      jobId,
-      roundName: r.roundName,
-      sequence: index + 1,
+  function loadLocations() {
+    let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
+    let allLocations = [...new Set([...defaultLocations, ...savedLocations])];
+
+    locationSelect.innerHTML = `<option value="" disabled>Select Location</option>`;
+    allLocations.forEach(loc => {
+      let opt = document.createElement("option");
+      opt.value = loc;
+      opt.textContent = loc;
+      if (job.location === loc) opt.selected = true; // auto-select job's location
+      locationSelect.appendChild(opt);
     });
+  }
+
+  // Show input box
+  addLocationBtn.addEventListener("click", () => {
+    newLocationBox.classList.toggle("hidden");
+    newLocationInput.focus();
   });
 
-  // Save job
-  jobs.push(newJob);
+  // Save new location
+  saveLocationBtn.addEventListener("click", () => {
+    let newLoc = newLocationInput.value.trim();
+    if (newLoc) {
+      let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
+      if (!savedLocations.includes(newLoc)) {
+        savedLocations.push(newLoc);
+        localStorage.setItem("locations", JSON.stringify(savedLocations));
+        Toastify({
+          text: `Location "${newLoc}" added successfully!`,
+          duration: 3000,
+          gravity: "bottom",
+          position: "right",
+          backgroundColor: "#28a745",
+        }).showToast();
+      }
+      newLocationInput.value = "";
+      newLocationBox.classList.add("hidden");
+      loadLocations();
+      locationSelect.value = newLoc; // auto-select new location
+    }
+  });
 
-  // Persist to localStorage
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-  localStorage.setItem("rounds", JSON.stringify(rounds));
+  loadLocations();
+}
 
-  // Reset
-  tempRounds = [];
-  document.getElementById("rounds-container").innerHTML = "";
-  document.getElementById("create-job-form").reset();
-
-  // Toast
-  Toastify({
-    text: "Job & Rounds Saved Successfully ✅",
-    duration: 3000,
-    gravity: "top",
-    position: "right",
-    backgroundColor: "#265DF5",
-  }).showToast();
-});

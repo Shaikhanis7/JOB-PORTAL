@@ -126,7 +126,7 @@
             <p>${job.responsibilities || "Not provided"}</p>
           </div>
           <div class="flex justify-start mt-4">
-            <button class="apply-btn bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-secondary transition">
+            <button class="apply-btn bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-secondary transition" data-job-id="${job.id}">
               Apply Now
             </button>
           </div>
@@ -517,14 +517,52 @@ applicationForm.addEventListener("submit", e => {
     skills: selectedSkills,
     resume: currentUser.resume,
     status: "Applied",
-    appliedAt: new Date().toISOString()
+    appliedAt: new Date().toISOString(),
+    roundIds: []
   };
 
-  // Append to localStorage
-  const existingApplications = JSON.parse(localStorage.getItem("applications") || "[]");
-  existingApplications.push(application);
-  localStorage.setItem("applications", JSON.stringify(existingApplications));
 
-  alert("Application submitted successfully!");
-  closeModal();
+ const jobs = JSON.parse(localStorage.getItem("jobs") || "[]");
+ const job = jobs.find(j => j.id === currentJobId);
+ console.log(job.rounds)
+const roundsTable = JSON.parse(localStorage.getItem("rounds") || "[]");
+
+let applicationRounds = JSON.parse(localStorage.getItem("applicationRounds") || "[]");
+console.log(roundsTable)
+
+if (job && Array.isArray(job.rounds) && job.rounds.length > 0) {
+  job.rounds.forEach(roundId => {
+    const roundData = roundsTable.find(r => r.roundId === roundId);
+    // if (!roundData) return;
+
+    const roundRecordId = application.id+"-"+roundId
+
+    applicationRounds.push({
+      id: roundRecordId,
+      applicationId: application.id,
+      roundId: roundId,
+      name:application.name,
+      jobTitle:job.title,
+      email:application.email,
+      roundNumber: roundData.sequence,
+      marks: null,
+      status: "Pending",
+      updatedAt: new Date().toISOString()
+    });
+
+    // Link this round record to application
+    application.roundIds.push(roundRecordId);
+  });
+
+  // Save applicationRounds once
+  localStorage.setItem("applicationRounds", JSON.stringify(applicationRounds));
+}
+
+// Save application **only once** after adding roundIds
+const existingApplications = JSON.parse(localStorage.getItem("applications") || "[]");
+existingApplications.push(application);
+localStorage.setItem("applications", JSON.stringify(existingApplications));
+
+alert("Application submitted successfully!");
+closeModal();
 });
