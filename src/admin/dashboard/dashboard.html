@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Hive Dashboard</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- jsPDF + html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: "#265DF5",
+            secondary: "#0CADF3",
+            darkblue: "#0A1A2F",
+            neutral: { dark: "#0D1B2A", mid: "#1B263B", light: "#415A77" },
+            success: "#28A745",
+            danger: "#DC3545",
+            baselight: "#F4F6FA",
+            white: "#FFFFFF",
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="flex h-screen overflow-hidden bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white 
+    w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] 
+    transform -translate-x-full lg:translate-x-0 lg:relative 
+    transition-transform duration-300 z-30 shadow-lg">
+    
+   <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+    <a href="#" class="flex items-center py-2 px-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-white shadow-md transition">
+      <i class="fas fa-home w-5 mr-2"></i> Dashboard
+    </a>
+    <a href="../add-job/V2.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+      <i class="fas fa-tasks w-5 mr-2"></i> Manage Jobs
+    </a>
+    <a href="../applications-management/applications-management.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+      <i class="fas fa-folder-open w-5 mr-2"></i> Manage Applications
+    </a>
+    <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+      <i class="fas fa-users w-5 mr-2"></i> Candidates
+    </a>
+    <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+      <i class="fas fa-cog w-5 mr-2"></i> Settings
+    </a>
+  </nav>
+
+    <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+      <button class="w-full flex items-center justify-center py-2 px-4 bg-danger hover:bg-red-600 rounded transition">
+        <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile -->
+  <div id="overlay" class="fixed top-16 left-0 right-0 bottom-0 bg-black opacity-50 hidden z-20 lg:hidden"></div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-neutral-dark shadow fixed top-0 left-0 right-0 z-40 h-16 w-full">
+      <div class="flex items-center justify-between h-full px-4">
+        <div class="flex items-center space-x-3">
+          <button id="menu-toggle" class="lg:hidden rounded-md hover:bg-gray-200 dark:hover:bg-neutral-mid transition box-border">
+            <i id="menu-icon" class="fas fa-bars w-6 h-6 text-neutral-dark dark:text-white"></i>
+          </button>
+          <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white whitespace-nowrap">Job Hive</h2>
+        </div>
+        <div class="flex items-center space-x-3">
+          <!-- Download PDF Button -->
+          <button id="download-pdf" class="bg-primary text-white px-3 py-2 rounded hover:bg-secondary transition">
+            <i class="fas fa-file-pdf mr-2"></i> Download PDF
+          </button>
+
+          <button id="dark-toggle" class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
+            <i class="fas fa-moon w-5 h-5 text-gray-700 dark:text-white"></i>
+          </button>
+          <button class="rounded-full overflow-hidden w-10 h-10 bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:ring-2 hover:ring-primary transition">
+            <i class="fas fa-user text-gray-700 dark:text-white"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-auto p-6 mt-16">
+      <div class="max-w-7xl mx-auto space-y-10" id="dashboard-content">
+
+        <!-- Top Stats -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="top-stats"></section>
+
+        <!-- Graphs + Recent Activities -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-6" id="charts-container"></div>
+
+          <!-- Recent Activities -->
+          <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition flex flex-col">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Recent Activities</h3>
+            <div class="space-y-4 text-sm text-gray-600 dark:text-gray-300 overflow-y-auto max-h-[500px] pr-2" id="recent-activities">
+              <!-- Recent activities will render here dynamically -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+  </div>
+  
+  <!-- Custom JS -->
+  <script src="./dashboard.js"></script>
+
+  <script>
+    // PDF Export Function
+    document.getElementById("download-pdf").addEventListener("click", async () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF("p", "pt", "a4");
+
+      const content = document.getElementById("dashboard-content");
+
+      // Capture content as canvas
+      const canvas = await html2canvas(content, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      doc.save("job-hive-dashboard.pdf");
+    });
+  </script>
+</body>
+</html>

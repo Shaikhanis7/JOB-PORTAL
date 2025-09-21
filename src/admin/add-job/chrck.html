@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
@@ -23,8 +22,7 @@
        class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
 
     <!-- Close -->
-    <button onclick="JobModal.close()"
-            class="absolute top-2 right-2 text-black text-3xl font-bold p-1 rounded-full hover:bg-gray-200 transition">✕</button>
+    <button id="close-job-modal" class="absolute top-2 right-2 text-black text-3xl font-bold p-1 rounded-full hover:bg-gray-200 transition">✕</button>
 
     <!-- Stepper -->
     <div class="flex items-center mb-6 justify-center gap-3 flex-wrap mt-2">
@@ -37,7 +35,7 @@
 
     <!-- Form -->
     <form id="create-job-form" class="space-y-6 md:space-y-8">
-      <!-- Step 1 -->
+      <!-- Step 1: Job Basics -->
       <div class="step">
         <h2 class="text-xl md:text-2xl font-bold mb-4">Job Basics</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -45,15 +43,19 @@
             <label>Job Title</label>
             <input type="text" id="job-title" required class="w-full p-3 border rounded-lg shadow-sm"/>
           </div>
+
+          <!-- Category -->
           <div>
             <label>Category</label>
             <div class="flex gap-2">
               <div id="category-wrapper" class="flex-1">
                 <select id="job-category" class="w-full p-3 border rounded-lg"></select>
               </div>
-              <button type="button" onclick="JobModal.switchToInput('category')" class="px-4 py-2 bg-green-500 text-white rounded-lg">+</button>
+              <button type="button" id="add-category-btn" class="px-4 py-2 bg-green-500 text-white rounded-lg">+</button>
             </div>
           </div>
+
+          <!-- Job Type -->
           <div>
             <label>Job Type</label>
             <select id="job-type" class="w-full p-3 border rounded-lg">
@@ -63,23 +65,27 @@
               <option>Internship</option>
             </select>
           </div>
+
+          <!-- Location -->
           <div>
             <label>Location</label>
             <div class="flex gap-2">
               <div id="location-wrapper" class="flex-1">
                 <select id="job-location" class="w-full p-3 border rounded-lg"></select>
               </div>
-              <button type="button" onclick="JobModal.switchToInput('location')" class="px-4 py-2 bg-green-500 text-white rounded-lg">+</button>
+              <button type="button" id="add-location-btn" class="px-4 py-2 bg-green-500 text-white rounded-lg">+</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Step 2 -->
+      <!-- Step 2: Description & Skills -->
       <div class="step hidden">
-        <h2>Description & Skills</h2>
+        <h2 class="text-xl md:text-2xl font-bold mb-4">Description & Skills</h2>
         <textarea id="job-description" placeholder="Description" class="w-full p-3 border rounded-lg"></textarea>
         <textarea id="job-responsibilities" placeholder="Responsibilities" class="w-full p-3 border rounded-lg mt-2"></textarea>
+
+        <!-- Skills -->
         <div class="mt-2">
           <label>Skills</label>
           <div class="flex gap-2 mt-2">
@@ -90,23 +96,26 @@
         </div>
       </div>
 
-      <!-- Step 3 -->
+      <!-- Step 3: Rounds & Extras -->
       <div class="step hidden">
-        <h2>Rounds & Extras</h2>
+        <h2 class="text-xl md:text-2xl font-bold mb-4">Rounds & Extras</h2>
         <div class="mb-2">
           <input type="number" id="round-count" placeholder="Number of rounds" class="p-3 border rounded-lg"/>
           <button type="button" id="confirm-round-count" class="px-3 py-1 bg-blue-600 text-white rounded-lg ml-2">Confirm</button>
           <p id="round-limit-msg" class="text-sm text-gray-500"></p>
         </div>
+
         <div id="round-input-area" class="flex gap-2 mb-4 hidden">
           <input type="text" id="round-input" placeholder="Enter Round Name" class="flex-1 p-3 border rounded-lg"/>
           <button type="button" id="add-round-btn" class="px-3 py-1 bg-green-500 text-white rounded-lg">Add Round</button>
         </div>
+
         <div id="rounds-container" class="flex flex-wrap gap-2 mb-4"></div>
         <input type="number" id="job-positions" placeholder="Positions" class="p-3 border rounded-lg w-full mb-2"/>
         <input type="text" id="job-experience" placeholder="Experience" class="p-3 border rounded-lg w-full mb-2"/>
       </div>
 
+      <!-- Navigation Buttons -->
       <div class="flex justify-between pt-4">
         <button type="button" class="prev-step px-6 py-2 bg-gray-200 rounded-lg hidden">Back</button>
         <button type="button" class="next-step px-6 py-2 bg-blue-600 text-white rounded-lg">Next</button>

@@ -241,37 +241,6 @@ function timeAgo(dateStr) {
 
 renderJobs();
 
-function toggleJobStatus(id)
-{
-   const jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-  const job = jobs.find(j => j.id === id);
-
-  if (job.closedAt) {
-    Toastify({
-      text: "Job cannot be reopened",
-      duration: 3000,
-      gravity: "bottom",
-      position: "right",
-      backgroundColor: "red",
-    }).showToast();
-  } else {
-    // Close the job
-    job.closedAt = new Date().toISOString();
-    Toastify({
-      text: "Job closed successfully",
-      duration: 3000,
-      gravity: "bottom",
-      position: "right",
-      backgroundColor: "#ffc107",
-    }).showToast();
-  }
-
-  // Save back to storage
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-
-  // Refresh UI
-  renderJobs();
-}
 function deleteJob(id) {
   let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
   jobs = jobs.filter(job => job.id !== id);
@@ -336,22 +305,9 @@ function editJob(id) {
           class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-28">${job.responsibilities}</textarea>
       </div>
       <div class="col-span-1">
-  <label class="block font-medium text-gray-700 dark:text-white mb-1">Location</label>
-  <div class="flex gap-2">
-    <select name="location" class="job-location-select flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white focus:ring-2 focus:ring-primary outline-none">
-      <!-- options will be populated dynamically -->
-    </select>
-    <button type="button" class="add-location-btn px-3 py-2 bg-secondary text-white rounded-lg hover:bg-blue-500 transition">
-      <i class="fas fa-plus"></i>
-    </button>
-  </div>
-  <!-- Hidden Add Location Input -->
-  <div class="new-location-box hidden mt-2 flex gap-2">
-    <input type="text" class="new-location-input flex-1 p-2 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none" placeholder="Enter new location"/>
-    <button type="button" class="save-location-btn px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">Save</button>
-  </div>
-</div>
-
+        <input type="text" name="location" value="${job.location}" placeholder="Location"
+          class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
+      </div>
       <div class="col-span-1">
         <select name="jobType"
           class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid text-gray-700 dark:text-white focus:ring-2 focus:ring-primary outline-none">
@@ -777,119 +733,3 @@ createJobForm.addEventListener("submit", (e) => {
 // Initial render
 // ==========================
 filterAndRenderJobs();
-
-
-// ==========================
-// Manage Locations
-// ==========================
-const locationSelect = document.getElementById("job-location");
-const addLocationBtn = document.getElementById("add-location-btn");
-const newLocationBox = document.getElementById("new-location-box");
-const newLocationInput = document.getElementById("new-location-input");
-const saveLocationBtn = document.getElementById("save-location-btn");
-
-// Default locations
-let defaultLocations = ["Chennai", "Coimbatore", "Bangalore", "Hyderabad"];
-
-// Load saved + default locations
-function loadLocations() {
-  let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
-  let allLocations = [...new Set([...defaultLocations, ...savedLocations])];
-
-  locationSelect.innerHTML = `<option value="" disabled selected>Select Location</option>`;
-  allLocations.forEach(loc => {
-    let opt = document.createElement("option");
-    opt.value = loc;
-    opt.textContent = loc;
-    locationSelect.appendChild(opt);
-  });
-}
-
-// Show input box for new location
-addLocationBtn.addEventListener("click", () => {
-  newLocationBox.classList.toggle("hidden");
-  newLocationInput.focus();
-});
-
-// Save new location
-saveLocationBtn.addEventListener("click", () => {
-  let newLoc = newLocationInput.value.trim();
-  if (newLoc) {
-    let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
-    if (!savedLocations.includes(newLoc)) {
-      savedLocations.push(newLoc);
-      localStorage.setItem("locations", JSON.stringify(savedLocations));
-      Toastify({
-        text: `Location "${newLoc}" added successfully!`,
-        duration: 3000,
-        gravity: "bottom",
-        position: "right",
-        backgroundColor: "#28a745",
-      }).showToast();
-    }
-    newLocationInput.value = "";
-    newLocationBox.classList.add("hidden");
-    loadLocations();
-    locationSelect.value = newLoc; // auto-select new location
-  }
-});
-
-// Initialize dropdown
-loadLocations();
-
-
-function setupEditLocationDropdown(editForm, job) {
-  const locationSelect = editForm.querySelector(".job-location-select");
-  const addLocationBtn = editForm.querySelector(".add-location-btn");
-  const newLocationBox = editForm.querySelector(".new-location-box");
-  const newLocationInput = editForm.querySelector(".new-location-input");
-  const saveLocationBtn = editForm.querySelector(".save-location-btn");
-
-  let defaultLocations = ["Chennai", "Coimbatore", "Bangalore", "Hyderabad"];
-
-  function loadLocations() {
-    let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
-    let allLocations = [...new Set([...defaultLocations, ...savedLocations])];
-
-    locationSelect.innerHTML = `<option value="" disabled>Select Location</option>`;
-    allLocations.forEach(loc => {
-      let opt = document.createElement("option");
-      opt.value = loc;
-      opt.textContent = loc;
-      if (job.location === loc) opt.selected = true; // auto-select job's location
-      locationSelect.appendChild(opt);
-    });
-  }
-
-  // Show input box
-  addLocationBtn.addEventListener("click", () => {
-    newLocationBox.classList.toggle("hidden");
-    newLocationInput.focus();
-  });
-
-  // Save new location
-  saveLocationBtn.addEventListener("click", () => {
-    let newLoc = newLocationInput.value.trim();
-    if (newLoc) {
-      let savedLocations = JSON.parse(localStorage.getItem("locations")) || [];
-      if (!savedLocations.includes(newLoc)) {
-        savedLocations.push(newLoc);
-        localStorage.setItem("locations", JSON.stringify(savedLocations));
-        Toastify({
-          text: `Location "${newLoc}" added successfully!`,
-          duration: 3000,
-          gravity: "bottom",
-          position: "right",
-          backgroundColor: "#28a745",
-        }).showToast();
-      }
-      newLocationInput.value = "";
-      newLocationBox.classList.add("hidden");
-      loadLocations();
-      locationSelect.value = newLoc; // auto-select new location
-    }
-  });
-
-  loadLocations();
-}
-

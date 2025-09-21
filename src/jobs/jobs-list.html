@@ -37,7 +37,13 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body class="bg-baselight dark:bg-neutral-dark text-darkblue dark:text-white transition-colors duration-500 overflow-x-hidden">
+<body class="
+  bg-gradient-to-br from-blue-50 to-white 
+  dark:bg-gradient-to-br dark:from-neutral-dark dark:to-neutral-dark
+  text-darkblue dark:text-white
+  transition-colors duration-500 overflow-x-hidden
+">
+
 
 <!-- Navbar -->
 <nav class="w-full shadow-md fixed top-0 left-0 bg-white dark:bg-gray-900 z-50 transition-colors duration-300">
@@ -208,13 +214,11 @@
 </div>
 <!-- Apply Modal -->
 <div id="apply-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 md:p-4 hidden">
-  <div id="apply-modal-content"
-       class="bg-white dark:bg-neutral-mid w-full max-w-md md:max-w-4xl lg:max-w-6xl rounded-3xl shadow-2xl p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
+  <div id="apply-modal-content" class="bg-white dark:bg-neutral-mid w-full max-w-md md:max-w-4xl lg:max-w-6xl rounded-3xl shadow-2xl p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
 
     <!-- Close Button -->
     <button id="close-apply-modal"
             class="absolute top-2 right-2 text-black dark:text-white text-3xl md:text-4xl font-bold p-1 md:p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-shadow">
-      <!-- SVG Close Icon -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 md:w-7 md:h-7">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
@@ -223,7 +227,7 @@
     <!-- Stepper -->
     <div class="flex items-center mb-6 justify-center md:justify-start gap-3 flex-wrap mt-2">
       <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold bg-gradient-to-r from-primary to-secondary shadow-md">1</div>
-      <div class="step-line h-1 flex-1 min-w-[40px] bg-gradient-to-r from-primary to-secondary rounded"></div>
+      <div class="step-line h-1 flex-1 min-w-[40px] bg-gray-300 rounded"></div>
       <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-gray-600 font-semibold border-2 border-gray-300 bg-white">2</div>
       <div class="step-line h-1 flex-1 min-w-[40px] bg-gray-300 rounded"></div>
       <div class="step-circle w-12 h-12 rounded-full flex items-center justify-center text-gray-600 font-semibold border-2 border-gray-300 bg-white">3</div>
@@ -297,9 +301,9 @@
       <!-- Step 3: Resume -->
       <div class="step hidden">
         <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Resume</h2>
-        <input type="file" id="app-resume" accept=".pdf,.doc,.docx"
+        <input type="file" id="app-resume" accept="application/pdf"
                class="w-full p-3 md:p-4 border rounded-lg shadow-sm mb-2">
-        <div id="resume-preview" class="text-gray-700 mt-2"></div>
+        <div id="resume-preview" class="text-gray-700 mt-2 flex flex-col gap-2"></div>
       </div>
 
       <!-- Navigation Buttons -->

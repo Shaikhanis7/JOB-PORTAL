@@ -16,9 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   categories = JSON.parse(localStorage.getItem("jobCategories")) || categories;
 locations = JSON.parse(localStorage.getItem("jobLocations")) || locations;
 
-populateSelect("job-category", categories);
-populateSelect("job-location", locations);
-
   let skills = [];
   let tempRounds = [];
   let roundLimit = 0;
