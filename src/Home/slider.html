@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobHive Portal with Slider</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Font Awesome & Feather Icons -->
+  <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+</head>
+<body class="bg-gray-50 hide-scrollbar">
+<!-- Loader -->
+<div id="loader" class="bg-gradient-to-br from-blue-50 to-white " >
+    <span class="loader"></span>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="w-full shadow-md fixed top-0 left-0 bg-white z-50">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center">
+          <span class="text-2xl font-bold text-blue-600">JobHive</span>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#" class="nav-link">Products</a>
+          <a href="#" class="nav-link">Solutions</a>
+          <a href="#" class="nav-link">Developers</a>
+          <a href="#" class="nav-link">Resources</a>
+          <a href="#" class="nav-link">Customers</a>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login</a>
+        </div>
+        <div class="md:hidden">
+          <button id="menu-btn" class="text-gray-700 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out md:hidden z-40">
+      <div class="p-6 flex flex-col items-center space-y-4 relative">
+        <button id="close-btn" class="absolute top-4 right-4 text-gray-700 hover:text-blue-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        <a href="#" class="nav-link">Products</a>
+        <a href="#" class="nav-link">Solutions</a>
+        <a href="#" class="nav-link">Developers</a>
+        <a href="#" class="nav-link">Resources</a>
+        <a href="#" class="nav-link">Customers</a>
+
+        <div class="pt-4 flex space-x-3">
+          <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Slider Section -->
+  <div id="genworx-slider" class="mt-16"></div>
+
+  
+ <div class="bg-gradient-to-br from-blue-50 to-white">
+
+<section class="whyus py-20 text-center px-4">
+  <h2 class="text-4xl font-bold text-[#003366] mb-4 relative inline-block">Why Work With Us
+    <span class="block w-16 h-1 bg-blue-600 rounded mt-2 mx-auto"></span>
+  </h2>
+  <p class="text-lg text-gray-600 mb-12">Discover what makes our workplace inspiring, inclusive, and growth-oriented.</p>
+
+  <!-- Features Grid / Slider -->
+  <!-- Features Grid / Slider -->
+<!-- Features Grid -->
+<div id="whyusSlider" 
+     class="max-w-screen mx-auto grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 justify-items-center">
+  
+  <!-- Card 1 -->
+  <div class="feature-card bg-white p-8 rounded-2xl shadow-md border border-blue-100 text-center transform transition duration-300 hover:scale-105">
+    <div class="flex justify-center mb-5"><i class="fas fa-bolt"></i></div>
+    <h3 class="text-xl font-semibold mb-3">Innovation</h3>
+    <p>Encouraging creativity and new ideas through cutting-edge technology.</p>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="feature-card bg-white p-8 rounded-2xl shadow-md border border-blue-100 text-center transform transition duration-300 hover:scale-105">
+    <div class="flex justify-center mb-5"><i class="fas fa-users"></i></div>
+    <h3 class="text-xl font-semibold mb-3">Team Spirit</h3>
+    <p>Collaboration and growing stronger together as a team.</p>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="feature-card bg-white p-8 rounded-2xl shadow-md border border-blue-100 text-center transform transition duration-300 hover:scale-105">
+    <div class="flex justify-center mb-5"><i class="fas fa-chart-line"></i></div>
+    <h3 class="text-xl font-semibold mb-3">Career Growth</h3>
+    <p>Continuous learning, mentorship, and career advancement paths.</p>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="feature-card bg-white p-8 rounded-2xl shadow-md border border-blue-100 text-center transform transition duration-300 hover:scale-105">
+    <div class="flex justify-center mb-5"><i class="fas fa-heart"></i></div>
+    <h3 class="text-xl font-semibold mb-3">Work-Life Balance</h3>
+    <p>Flexible schedules, remote options, and wellness programs.</p>
+  </div>
+
+  <!-- Card 5 -->
+  <div class="feature-card bg-white p-8 rounded-2xl shadow-md border border-blue-100 text-center transform transition duration-300 hover:scale-105">
+    <div class="flex justify-center mb-5"><i class="fas fa-globe"></i></div>
+    <h3 class="text-xl font-semibold mb-3">Global Impact</h3>
+    <p>Contribute to meaningful projects with worldwide impact.</p>
+  </div>
+
+  <!-- Card 6 -->
+  <div class="feature-card bg-white p-8 rounded-2xl shadow-md border border-blue-100 text-center transform transition duration-300 hover:scale-105">
+    <div class="flex justify-center mb-5"><i class="fas fa-star"></i></div>
+    <h3 class="text-xl font-semibold mb-3">Competitive Benefits</h3>
+    <p>Health coverage, retirement plans, and performance-based rewards.</p>
+  </div>
+</div>
+
+
+  <!-- Mobile dots -->
+  <div class="slider-dots mt-4" id="whyusDots"></div>
+</section>
+<div class="bg-gradient-to-br from-blue-50 to-white text-slate-800">
+
+  <section id="jobsSection" class="max-w-screen mx-auto px-4 py-12">
+    <div class="flex items-center  justify-center mb-5">
+      <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-center">Current Openings</h2>
+      <!-- <p class="text-sm text-slate-500">Hand-picked roles — updated recently</p> -->
+    </div>
+
+    <!-- grid container -->
+    <div id="jobsGrid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+    <!-- fallback when no jobs -->
+    <div id="noJobs" class="hidden mt-8 text-center text-slate-500">
+      No jobs to show.
+    </div>
+  </section>
+  </div>
+  <!-- About Us Section -->
+<section id="about" class="relative bg-gradient-to-br from-blue-50 to-white py-20 px-6">
+  <div class="max-w-6xl mx-auto text-center">
+    <!-- Heading -->
+    <h2 class="text-4xl font-bold text-[#003366] mb-6 relative inline-block">
+      About Us
+      <span class="block w-16 h-1 bg-blue-600 rounded mt-2 mx-auto"></span>
+    </h2>
+
+    <!-- Intro -->
+    <p class="max-w-2xl mx-auto text-lg text-gray-600 leading-relaxed mb-12">
+      We are a leading company in <span class="font-semibold text-blue-600">AI-driven solutions</span>, 
+      committed to driving <strong>innovation, efficiency, and growth</strong> through 
+      cutting-edge technology and intelligent automation.
+    </p>
+
+    <!-- Cards -->
+    <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+      <!-- Mission Card -->
+      <div class="group bg-white p-8 rounded-2xl shadow-md border border-blue-100 
+                  transform transition duration-300 hover:scale-105 hover:shadow-lg">
+        <div class="flex justify-center mb-5">
+          <i class="fas fa-bullseye text-4xl text-blue-600 group-hover:text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-3 text-gray-800">Our Mission</h3>
+        <p class="text-gray-600 leading-relaxed">
+          To empower businesses with AI solutions that foster 
+          <span class="font-semibold text-blue-600">innovation, efficiency, and growth</span>.
+        </p>
+      </div>
+
+      <!-- Vision Card -->
+      <div class="group bg-white p-8 rounded-2xl shadow-md border border-blue-100 
+                  transform transition duration-300 hover:scale-105 hover:shadow-lg">
+        <div class="flex justify-center mb-5">
+          <i class="fas fa-lightbulb text-4xl text-blue-600 group-hover:text-blue-700"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-3 text-gray-800">Our Vision</h3>
+        <p class="text-gray-600 leading-relaxed">
+          To be the <span class="font-semibold text-blue-600">leading AI solutions provider</span>, 
+          transforming industries through intelligent automation and 
+          <span class="italic">data-driven insights</span>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials" class="bg-white py-20 px-6">
+  <div class="max-w-6xl mx-auto text-center">
+    <!-- Heading -->
+    <h2 class="text-4xl font-bold text-[#003366] mb-10 relative inline-block">
+      What Our Employees Say
+      <span class="block w-16 h-1 bg-blue-600 rounded mt-2 mx-auto"></span>
+    </h2>
+
+    <!-- Slider Container -->
+    <div class="relative max-w-5xl mx-auto overflow-hidden">
+      <!-- Slider -->
+      <div id="testimonialSlider"
+           class="flex md:grid md:grid-cols-3 gap-6 transition-transform duration-500 ease-in-out">
+        
+        <!-- Card 1 -->
+        <div class="testimonial-card flex-shrink-0 w-full md:w-auto bg-gray-50 p-6 rounded-2xl shadow-md text-center">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+               alt="John D" 
+               class="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-4 border-blue-600">
+          <p class="text-gray-600 text-base leading-relaxed mb-4">
+            “Great place to grow my career and work with amazing people.”
+          </p>
+          <h4 class="text-blue-600 font-semibold">- John D, Software Engineer</h4>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="testimonial-card flex-shrink-0 w-full md:w-auto bg-gray-50 p-6 rounded-2xl shadow-md text-center">
+          <img src="https://randomuser.me/api/portraits/women/45.jpg" 
+               alt="Sarah L" 
+               class="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-4 border-blue-600">
+          <p class="text-gray-600 text-base leading-relaxed mb-4">
+            “The company culture is supportive and inspiring!”
+          </p>
+          <h4 class="text-blue-600 font-semibold">- Sarah L, Data Analyst</h4>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="testimonial-card flex-shrink-0 w-full md:w-auto bg-gray-50 p-6 rounded-2xl shadow-md text-center">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" 
+               alt="Priya K" 
+               class="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-4 border-blue-600">
+          <p class="text-gray-600 text-base leading-relaxed mb-4">
+            “I love the work-life balance and flexibility here.”
+          </p>
+          <h4 class="text-blue-600 font-semibold">- Priya K, Designer</h4>
+        </div>
+      </div>
+
+      <!-- Dots (Mobile only) -->
+      <div id="testimonialDots" class="flex justify-center mt-6 gap-3 md:hidden"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gradient-to-tr from-blue-50 to-white text-gray-800 py-16 px-6">
+  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+
+    <!-- Company Info -->
+    <div class="space-y-4">
+      <h3 class="text-2xl font-bold text-blue-600">JobHive</h3>
+      <p class="text-gray-600 leading-relaxed">
+        Empowering businesses with AI-driven solutions to drive innovation, efficiency, and growth.
+      </p>
+      <div class="flex space-x-4 mt-2">
+        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="space-y-4">
+      <h4 class="text-lg font-semibold text-gray-800">Quick Links</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Products</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Solutions</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Developers</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Resources</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Customers</a></li>
+      </ul>
+    </div>
+
+    <!-- Resources -->
+    <div class="space-y-4">
+      <h4 class="text-lg font-semibold text-gray-800">Resources</h4>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Blog</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Help Center</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">API Docs</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Community</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">FAQs</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="space-y-4">
+      <h4 class="text-lg font-semibold text-gray-800">Contact Us</h4>
+      <p class="text-gray-600">123 AI Street, Tech City, IN</p>
+      <p class="text-gray-600">Email: support@jobhive.com</p>
+      <p class="text-gray-600">Phone: +91 98765 43210</p>
+      <div class="mt-4">
+        <a href="#" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="mt-12 border-t border-gray-200 pt-6 text-center text-gray-500 text-sm">
+    &copy; 2025 JobHive. All rights reserved.
+  </div>
+</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

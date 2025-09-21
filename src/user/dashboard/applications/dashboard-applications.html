@@ -3,21 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Job Hive Dashboard</title>
+  <title>Job Hive Applications</title>
 
-
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Toastify CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-  <!-- Toastify JS -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> -->
 
   <script>
     tailwind.config = {
@@ -27,17 +18,19 @@
           colors: {
             primary: "#265DF5",
             secondary: "#0CADF3",
-            darkblue: "#0A1A2F",
+            success: "#28A745",
+            danger: "#DC3545",
+            baselight: "#F4F6FA",
             neutral: {
               dark: "#0D1B2A",
               mid: "#1B263B",
               light: "#415A77",
             },
-            success: "#28A745",
-            danger: "#DC3545",
-            baselight: "#F4F6FA",
-            white: "#FFFFFF",
           },
+          keyframes: {
+            fadeIn: { "0%": { opacity: 0, transform: "translateY(10px)" }, "100%": { opacity: 1, transform: "translateY(0)" } }
+          },
+          animation: { fadeIn: "fadeIn 0.5s ease-in-out forwards" }
         },
       },
     };
@@ -46,29 +39,15 @@
 <body class="flex h-screen overflow-hidden bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white">
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white 
-    w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] 
-    transform -translate-x-full lg:translate-x-0 lg:relative 
-    transition-transform duration-300 z-30 shadow-lg">
-    
+  <aside id="sidebar" class="bg-white dark:bg-neutral-dark w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] transform -translate-x-full lg:translate-x-0 lg:relative transition-transform duration-300 z-30 shadow-lg">
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-        <i class="fas fa-home w-5 mr-2"></i> Profile
-      </a>
-      <a href="./jobs/index.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-        <i class="fas fa-briefcase w-5 mr-2"></i> Applications
-      </a>
-      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-        <i class="fas fa-users w-5 mr-2"></i> Saved jobs
-      </a>
-      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-        <i class="fas fa-cog w-5 mr-2"></i> Settings
-      </a>
+      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white"><i class="fas fa-user mr-2"></i> Profile</a>
+      <a href="#" class="flex items-center py-2 px-3 rounded bg-primary text-white"><i class="fas fa-briefcase mr-2"></i> Applications</a>
+      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white"><i class="fas fa-bookmark mr-2"></i> Saved Jobs</a>
+      <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white"><i class="fas fa-cog mr-2"></i> Settings</a>
     </nav>
-    <div class="p-4 border-t border-gray-200 dark:border-gray-800">
-      <button class="w-full flex items-center justify-center py-2 px-4 bg-danger hover:bg-red-600 rounded transition">
-        <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
-      </button>
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+      <button class="w-full flex items-center justify-center py-2 px-4 bg-danger hover:bg-red-600 rounded text-white"><i class="fas fa-sign-out-alt mr-2"></i> Logout</button>
     </div>
   </aside>
 
@@ -77,36 +56,84 @@
 
   <!-- Main Content -->
   <div class="flex-1 flex flex-col overflow-hidden">
-
     <!-- Header -->
-    <header class="bg-white dark:bg-neutral-dark shadow fixed top-0 left-0 right-0 z-40 h-16 w-full">
-      <div class="flex items-center justify-between h-full px-4">
-        <!-- Left -->
-        <div class="flex items-center space-x-3">
-          <button id="menu-toggle" class="lg:hidden rounded-md hover:bg-gray-200 dark:hover:bg-neutral-mid transition box-border">
-            <i id="menu-icon" class="fas fa-bars w-6 h-6 text-neutral-dark dark:text-white"></i>
-          </button>
-          <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white whitespace-nowrap">Job Hive</h2>
-        </div>
-        <!-- Right -->
-        <div class="flex items-center space-x-3">
-          <button id="dark-toggle" class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
-            <i class="fas fa-moon w-5 h-5 text-gray-700 dark:text-white"></i>
-          </button>
-          <button class="rounded-full overflow-hidden w-10 h-10 bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:ring-2 hover:ring-primary transition">
-            <i class="fas fa-user text-gray-700 dark:text-white"></i>
-          </button>
-        </div>
+    <header class="bg-white dark:bg-neutral-dark shadow fixed top-0 left-0 right-0 z-40 h-16 w-full flex items-center justify-between px-4">
+      <div class="flex items-center space-x-3">
+        <button id="menu-toggle" class="lg:hidden"><i id="menu-icon" class="fas fa-bars text-xl"></i></button>
+        <h2 class="font-semibold text-lg">Applications</h2>
       </div>
+      <button id="dark-toggle" class="p-2 rounded hover:bg-gray-200 dark:hover:bg-neutral-mid"><i class="fas fa-moon"></i></button>
     </header>
 
-    <main class="flex-1 overflow-auto p-6 mt-16">
-    
+    <!-- Page Content -->
+    <main class="flex-1 overflow-auto p-6 mt-16 flex flex-col lg:flex-row gap-6">
+      
+      <!-- Filters Sidebar -->
+      <section class="lg:w-1/4 bg-white dark:bg-neutral-mid p-4 rounded-lg shadow space-y-4 h-fit sticky">
+        <!-- Search -->
+        <div class="flex items-center gap-3">
+          <input type="text" id="searchInput" placeholder="Search jobs..." class="w-full p-2 border rounded focus:ring-2 focus:ring-primary" />
+          <button class="bg-primary text-white px-4 py-2 rounded hover:bg-blue-600"><i class="fas fa-search"></i></button>
+        </div>
 
-    
+        <!-- Location Filter -->
+        <div>
+          <h3 class="font-medium mb-2">Location</h3>
+          <div class="flex flex-col gap-2 text-sm">
+            <label><input type="checkbox" class="filter-location mr-2" value="New York"> New York</label>
+            <label><input type="checkbox" class="filter-location mr-2" value="San Francisco"> San Francisco</label>
+            <label><input type="checkbox" class="filter-location mr-2" value="Coimbatore"> Coimbatore</label>
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div>
+          <h3 class="font-medium mb-2">Job Category</h3>
+          <div class="flex flex-col gap-2 text-sm">
+            <label><input type="radio" name="category" value="" class="mr-2" checked> All</label>
+            <label><input type="radio" name="category" value="Engineering" class="mr-2"> Engineering</label>
+            <label><input type="radio" name="category" value="Design" class="mr-2"> Design</label>
+            <label><input type="radio" name="category" value="Management" class="mr-2"> Management</label>
+          </div>
+        </div>
+
+        <!-- Status Filter Dropdown -->
+        <div>
+          <h3 class="font-medium mb-2">Application Status</h3>
+          <select id="statusFilter" class="w-full border p-2 rounded focus:ring-2 focus:ring-primary text-sm">
+            <option value="">All</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Withdrawn">Withdrawn</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Applications List -->
+      <section class="flex-1 space-y-6">
+        <div id="applicationsList" class="space-y-6"></div>
+        <div id="pagination" class="flex justify-center mt-6 space-x-2"></div>
+      </section>
     </main>
   </div>
-  <!-- Custom JS -->
-  <script src="./script.js"></script>
+
+  <!-- Modal -->
+  <div id="appModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white dark:bg-neutral-mid p-6 rounded-lg max-w-lg w-full relative">
+      <button id="modalClose" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800"><i class="fas fa-times"></i></button>
+      <h3 id="modalTitle" class="text-xl font-semibold text-primary mb-2"></h3>
+      <p id="modalCompany" class="mb-1 text-gray-600"></p>
+      <p id="modalLocation" class="mb-1 text-gray-600"></p>
+      <p id="modalCategory" class="mb-1 text-gray-600"></p>
+      <p id="modalApplied" class="mb-3 text-gray-500"></p>
+      <h4 class="font-medium mb-1">Application Rounds:</h4>
+      <ul id="modalRounds" class="list-disc list-inside text-sm"></ul>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="./dashboard-applications.js" defer></script>
+
 </body>
 </html>

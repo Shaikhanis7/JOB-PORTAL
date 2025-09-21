@@ -1,0 +1,241 @@
+.nav-link {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 4px;
+  transition: color 0.3s ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0%; height: 2px;
+  background: #2563eb;
+  box-shadow: 0 0 8px #2563eb;
+  transition: width 0.3s ease;
+}
+.nav-link.active, .nav-link:hover { color: #2563eb; }
+.nav-link.active::after, .nav-link:hover::after { width: 100%; }
+
+/* Slider */
+.slide {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  position: absolute;
+  inset: 0;
+}
+.slide.active { opacity: 1; position: relative; }
+
+.nav-chevron {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 2.5rem; color: white; cursor: pointer;
+  z-index: 10; transition: color 0.3s; user-select: none;
+}
+.nav-chevron:hover { color: #60a5fa; }
+@media (max-width: 640px) { .nav-chevron { font-size: 1.8rem; } }
+
+.dot { cursor: pointer; border-radius: 50%; transition: background-color 0.3s; }
+
+#whyusSlider::-webkit-scrollbar { display: none; }
+#whyusSlider { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Feature Cards Gradient Hover */
+.feature-card {
+  position: relative; overflow: hidden;
+  transition: transform 0.5s ease, color 0.5s ease;
+}
+.feature-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  background-size: 200% 200%;
+  opacity: 0; transition: opacity 0.5s ease;
+  z-index: 0;
+}
+.feature-card:hover::before {
+  opacity: 1;
+  animation: gradientMove 4s linear infinite;
+}
+.feature-card > * { position: relative; z-index: 10; }
+.feature-card:hover h3, .feature-card:hover p { color: white; }
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Mobile Slider */
+@media (max-width: 768px) {
+  #whyusSlider {
+    overflow-x: auto;
+    display: flex;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem; padding-bottom: 1rem;
+  }
+  .feature-card { scroll-snap-align: center; min-width: 90%; flex-shrink: 0; }
+  .slider-dots {
+    display: flex; justify-content: center;
+    gap: 0.5rem; margin-top: 1rem;
+  }
+  .slider-dots span {
+    width: 12px; height: 12px;
+    background: #ccc; border-radius: 50%;
+    cursor: pointer; transition: background 0.3s;
+  }
+  .slider-dots span.active { background: #0077cc; }
+}
+@media (min-width: 769px) { .slider-dots { display: none; } }
+
+
+ #whyusSlider::-webkit-scrollbar { display: none; }
+    #whyusSlider { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Card gradient hover with animation */
+    .feature-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s ease, color 0.5s ease;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, #0077cc, #3399ff, #005fa3);
+      background-size: 400% 400%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 0;
+      transform: scale(1);
+    }
+    .feature-card:hover::before {
+      opacity: 1;
+      animation: gradientMove 4s linear infinite;
+    }
+    .feature-card > * { position: relative; z-index: 10; }
+
+    /* Text color transition on hover */
+    .feature-card:hover h3,
+    .feature-card:hover p { color: white; }
+
+    /* Gradient animation keyframes */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Mobile Slider */
+    @media (max-width: 768px) {
+      #whyusSlider {
+        overflow-x: auto;
+        display: flex;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 1rem;
+        padding-bottom: 1rem;
+      }
+      .feature-card { scroll-snap-align: center; min-width: 90%; flex-shrink: 0; }
+      .slider-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+      .slider-dots span { width: 12px; height: 12px; background: #ccc; border-radius: 50%; cursor: pointer; transition: background 0.3s; }
+      .slider-dots span.active { background: #0077cc; }
+    }
+
+    /* Make FA icons follow text color */
+    .feature-card i {
+      color: #2563eb; /* default blue */
+      transition: color 0.5s ease;
+      font-size: 3rem; /* match feather icon size */
+    }
+
+    /* On hover, icons also turn white */
+    .feature-card:hover i {
+      color: white;
+    }
+
+    /* Hide dots on desktop */
+    /* @media (min-width: 769px) { .slider-dots { display: none; } } */
+
+    /* You can keep it in your style.css */
+ #loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 40;
+    }
+
+    /* Loader style */
+    .loader {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      transform: rotateZ(45deg);
+      perspective: 1000px;
+    }
+
+    .loader:before,
+    .loader:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: inherit;
+      height: inherit;
+      border-radius: 50%;
+      transform: rotateX(70deg);
+      color: black;
+      animation: spin 1s linear infinite;
+    }
+
+    .loader:after {
+      color: #FF3D00; /* second color */
+      transform: rotateY(70deg);
+      animation-delay: 0.4s;
+    }
+
+    @keyframes spin {
+      0%, 100% { box-shadow: 0.2em 0 0 0 currentColor; }
+      12% { box-shadow: 0.2em 0.2em 0 0 currentColor; }
+      25% { box-shadow: 0 0.2em 0 0 currentColor; }
+      37% { box-shadow: -0.2em 0.2em 0 0 currentColor; }
+      50% { box-shadow: -0.2em 0 0 0 currentColor; }
+      62% { box-shadow: -0.2em -0.2em 0 0 currentColor; }
+      75% { box-shadow: 0 -0.2em 0 0 currentColor; }
+      87% { box-shadow: 0.2em -0.2em 0 0 currentColor; }
+    }
+
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+.job-card {
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .job-card:hover {
+      transform: translateY(-6px) scale(1.01);
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    style>
+  #testimonialDots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    display: inline-block;
+    cursor: pointer;
+  }
+  #testimonialDots span.active {
+    background: #0077cc;
+  }
