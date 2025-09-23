@@ -40,7 +40,7 @@
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
 
   <!-- Back Button -->
-  <button onclick="history.back()" 
+  <button id="back"
           class="absolute top-6 right-6 flex items-center space-x-2 text-white 
                  bg-gradient-to-r from-primary to-secondary 
                  px-4 py-2 rounded-lg 
@@ -216,8 +216,19 @@
 
       notyf.success("🎉 Account created successfully!");
       form.reset();
+
+      form.reset();
+   setTimeout(() => {
+    window.location.href = "./auth-login.html";
+  }, 1000)
       // window.location.href=
     });
+
+    const backBtn = document.getElementById("back");
+
+backBtn.addEventListener("click", () => {
+  window.location.href = "../../index.html"; // Change this to your homepage path
+});
   </script>
 
 </body>

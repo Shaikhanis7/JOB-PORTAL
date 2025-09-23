@@ -97,5 +97,17 @@ form.addEventListener("submit", (e) => {
   localStorage.setItem("users", JSON.stringify(users));
 
   notyf.success("🎉 Account created successfully!");
+  
   form.reset();
+   setTimeout(() => {
+    window.location.href = "./auth-login.html";
+  }, 1000);
+
+});
+
+
+const backBtn = document.getElementById("back");
+
+backBtn.addEventListener("click", () => {
+  window.location.href = "../../index.html"; // Change this to your homepage path
 });

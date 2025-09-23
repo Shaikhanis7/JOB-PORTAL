@@ -282,6 +282,8 @@ function renderLocations(jobs) {
 renderJobs(jobs);
 renderCategories(jobs);
 renderLocations(jobs);
+renderJobTypes(jobs); // <--- NEW
+
 
 // Hamburger Menu Toggle
 const hamburger = document.getElementById("hamburger");
@@ -303,21 +305,15 @@ function applyFilters() {
     if (selectedCategory && job.category !== selectedCategory) return false;
 
     // Location filter
-    if (
-      selectedLocations.length > 0 &&
-      !selectedLocations.includes(job.location)
-    )
+    if (selectedLocations.length > 0 && !selectedLocations.includes(job.location))
       return false;
+
+    // Job Type filter
+    if (selectedJobType && job.jobType !== selectedJobType) return false;
 
     // Search filter (title + description + skills)
     if (searchQuery) {
-      const text = (
-        job.title +
-        " " +
-        job.description +
-        " " +
-        job.skills.join(" ")
-      ).toLowerCase();
+      const text = (job.title + " " + job.description + " " + job.skills.join(" ")).toLowerCase();
       if (!text.includes(searchQuery.toLowerCase())) return false;
     }
 
@@ -326,6 +322,7 @@ function applyFilters() {
 
   renderJobs(filteredJobs);
 }
+
 
 // === Hook up Category Filters ===
 function renderCategories(jobs) {
@@ -623,3 +620,39 @@ let jobs = JSON.parse(localStorage.getItem("jobs")||"[]");
 
 // Initialize
 updateStepUI();
+
+
+function renderJobTypes(jobs) {
+  const typeContainer = document.getElementById("type-container");
+  typeContainer.innerHTML = "";
+
+  const types = [...new Set(jobs.map(job => job.jobType))];
+
+  // Add "All" option
+  const allLabel = document.createElement("label");
+  allLabel.className = "flex items-center space-x-2";
+  allLabel.innerHTML = `
+    <input type="radio" name="jobType" value="" class="filter-jobType">
+    <span>All</span>
+  `;
+  typeContainer.appendChild(allLabel);
+
+  types.forEach(type => {
+    const label = document.createElement("label");
+    label.className = "flex items-center space-x-2";
+    label.innerHTML = `
+      <input type="radio" name="jobType" value="${type}" class="filter-jobType">
+      <span>${type}</span>
+    `;
+    typeContainer.appendChild(label);
+  });
+
+  // Hook up event listener
+  typeContainer.addEventListener("change", (e) => {
+    selectedJobType = e.target.value || null;
+    applyFilters();
+  });
+}
+
+// Filter state for job type
+let selectedJobType = null;

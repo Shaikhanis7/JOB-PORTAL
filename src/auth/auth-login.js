@@ -42,7 +42,7 @@ form.addEventListener("submit", (e) => {
     sessionStorage.setItem("currentUser", JSON.stringify(adminUser));
     sessionStorage.setItem("isLoggedIn", "true");
      setTimeout(() => {
-    window.location.href = "../admin/dashboard/dashboard.html";
+    window.location.href = "../../index.html";
   }, 1000);
 }
   else
@@ -68,50 +68,9 @@ form.addEventListener("submit", (e) => {
 
   // Redirect to dashboard (example)
   setTimeout(() => {
-    window.location.href = "../user/dashboard/profile/index.html";
+    window.location.href = "../../index.html";
   }, 1000);
 }
-});
-
-// Dark mode toggle
-function toggleDarkMode() {
-  document.documentElement.classList.toggle("dark");
-  localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
-}
-const darkToggle = document.getElementById("dark-toggle");
-if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
-darkToggle.addEventListener("click", toggleDarkMode);
-
-// Hamburger Menu Toggle
-const hamburger = document.getElementById("hamburger");
-const mobileMenu = document.getElementById("mobile-menu");
-const mobileMenuContent = document.getElementById("mobile-menu-content");
-const closeMenu = document.getElementById("close-menu");
-
-// Open menu
-hamburger.addEventListener("click", () => {
-  mobileMenu.classList.remove("opacity-0", "pointer-events-none");
-  mobileMenu.classList.add("opacity-100", "pointer-events-auto");
-  mobileMenuContent.classList.remove("-translate-x-full");
-  mobileMenuContent.classList.add("translate-x-0");
-});
-
-// Close menu
-closeMenu.addEventListener("click", () => {
-  mobileMenu.classList.add("opacity-0", "pointer-events-none");
-  mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
-  mobileMenuContent.classList.add("-translate-x-full");
-  mobileMenuContent.classList.remove("translate-x-0");
-});
-
-// Close menu when clicking overlay
-mobileMenu.addEventListener("click", (e) => {
-  if (e.target === mobileMenu) {
-    mobileMenu.classList.add("opacity-0", "pointer-events-none");
-    mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
-    mobileMenuContent.classList.add("-translate-x-full");
-    mobileMenuContent.classList.remove("translate-x-0");
-  }
 });
 
 

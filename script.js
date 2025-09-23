@@ -329,7 +329,7 @@ if (currentUser) {
   if (currentUser.role === "admin") {
     dashboardLink.setAttribute("href", "./src/admin/dashboard/dashboard.html");
   } else if (currentUser.role === "user") {
-    dashboardLink.setAttribute("href", ".src/user/dashboard/profile/dashboard-profile.html");
+    dashboardLink.setAttribute("href", "./src/user/dashboard/profile/dashboard-profile.html");
   }
 } else {
   // Disable link for not logged-in users

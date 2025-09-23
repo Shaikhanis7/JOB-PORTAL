@@ -9,7 +9,7 @@ function seedSampleData() {
       { id: "103", title: "UI/UX Designer", jobType: "Contract" },
       { id: "104", title: "Project Manager", jobType: "Full-time" }
     ];
-    localStorage.setItem("jobs", JSON.stringify(sampleJobs));
+    // localStorage.setItem("jobs", JSON.stringify(sampleJobs));
   }
 
   if (!localStorage.getItem("applications")) {
@@ -27,7 +27,7 @@ function seedSampleData() {
 // ================= TOP STATS =================
 function createStatCard(title, value, iconClass, colorClass, gradientClass) {
   return `
-    <div class="relative glow-border bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg 
+    <div class="relative glow-border bg-white dark:bg-neutral-mid rounded-2xl p-6 shadow-lg 
                 hover:shadow-2xl transition transform hover:-translate-y-2 duration-500 group overflow-hidden flex">
       
       <!-- Left gradient border -->
