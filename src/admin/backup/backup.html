@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Job Hive - Backup & Recovery</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<!-- Toastify -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        primary: "#265DF5",
+        secondary: "#0CADF3",
+        darkblue: "#0A1A2F",
+        neutral: { dark: "#0D1B2A", mid: "#1B263B", light: "#415A77" },
+        success: "#28A745",
+        danger: "#DC3545",
+        baselight: "#F4F6FA",
+        white: "#FFFFFF",
+      },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+};
+</script>
+</head>
+<body class="flex h-screen overflow-hidden
+bg-gradient-to-br from-blue-50 to-white 
+             dark:from-neutral-mid dark:to-neutral-light
+             text-neutral-dark dark:text-white font-sans">
+
+
+ 
+
+<!-- Sidebar -->
+ <!-- Sidebar -->
+   <aside id="sidebar" class="bg-gradient-to-br from-blue-50 to-white 
+   dark:from-darkblue dark:to-neutral-dark 
+             text-neutral-dark dark:text-white
+    w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] 
+    transform -translate-x-full lg:translate-x-0 lg:relative 
+    transition-transform duration-300 z-30 shadow-lg">
+    
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <a href="../dashboard/dashboard.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-200 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-home w-5 mr-2"></i> Dashboard
+</a>
+
+<a href="../add-job/V2.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-200 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-tasks w-5 mr-2"></i> Manage Jobs
+</a>
+
+<a href="../applications-management/applications-management.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-200 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-folder-open w-5 mr-2"></i> Manage Applications
+</a>
+
+<a href="../manage-rounds/manage-rounds.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-200 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-layer-group w-5 mr-2"></i> Rounds Management
+</a>
+
+<a href="../backup/backup.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-200 ease-in-out
+          bg-gradient-to-r from-primary to-secondary text-white shadow">
+  <i class="fas fa-database w-5 mr-2"></i> Backup & Recovery
+</a>
+
+<a href="./settings.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-200 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-cog w-5 mr-2"></i> Settings
+</a>
+
+    </nav>
+    <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+      <button class="w-full flex items-center justify-center 
+        bg-gradient-to-r from-primary to-secondary 
+        text-white px-4 py-2 rounded-lg 
+        hover:from-secondary hover:to-primary 
+        transform transition-all duration-500 ease-in-out 
+        hover:scale-105 shadow-md">
+  <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
+</button>
+
+    </div>
+  </aside>
+
+<div id="overlay" class="fixed top-16 left-0 right-0 bottom-0 bg-black opacity-50 hidden z-20 lg:hidden"></div>
+
+<!-- Main Content -->
+<div class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- Header -->
+   <header class="bg-white dark:bg-neutral-dark shadow fixed top-0 left-0 right-0 z-40 h-16 w-full">
+  <div class="flex items-center justify-between h-full px-6">
+    <div class="flex items-center space-x-4">
+      <!-- Mobile Menu Toggle -->
+      <button id="menu-toggle" class="lg:hidden rounded-md hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
+        <i id="menu-icon" class="fas fa-bars w-6 h-6 text-neutral-dark dark:text-white"></i>
+      </button>
+
+      <!-- Branding -->
+      <div class="flex items-center">
+        <span class="text-xl sm:text-2xl md:text-2xl font-bold 
+                     text-blue-600 dark:text-blue-400 font-sans">
+          JobHive
+        </span>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center space-x-4">
+      <!-- Dark Mode Toggle -->
+      <button id="dark-toggle" class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
+        <i class="fas fa-moon w-5 h-5 text-gray-700 dark:text-white"></i>
+      </button>
+
+      <!-- User Avatar -->
+     <button class="rounded-full overflow-hidden w-10 h-10 bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:ring-2 hover:ring-primary transition">
+           <span>A</span>
+          </button>
+    </div>
+  </div>
+</header>
+
+
+  <main class="flex-1 overflow-auto p-6 mt-16 bg-basilight dark:bg-neutralMid">
+
+    <h1 class="text-4xl font-bold mb-10 text-center text-primary dark:text-secondary">Backup & Recovery</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- Manual Backup -->
+      <section class="bg-gradient-to-r from-primary to-secondary p-8 rounded-3xl shadow-lg flex flex-col items-center justify-center space-y-6">
+        <h2 class="text-2xl font-bold text-white">Manual Backup</h2>
+        <p class="text-white/80 text-center">Download backup by type or backup all at once.</p>
+        <div class="flex flex-col md:flex-row gap-3 w-full">
+          <select id="backupSelect" class="flex-1 p-3 rounded-xl border-none outline-none">
+            <option value="" disabled selected>Choose type</option>
+            <option value="applicationRounds">Application Rounds</option>
+            <option value="applications">Applications</option>
+            <option value="users">Users</option>
+            <option value="jobs">Jobs</option>
+            <option value="rounds">Rounds</option>
+            <option value="backupHistory">Backup History</option>
+          </select>
+          <button onclick="backupDataDropdown()" class="flex-1 bg-white text-primary font-bold px-6 py-3 rounded-xl shadow hover:scale-105 transition">Backup</button>
+          <button onclick="bulkBackup()" class="flex-1 bg-gradient-to-r from-danger to-red-700 text-white font-bold px-6 py-3 rounded-xl shadow hover:scale-105 transition">Backup All</button>
+        </div>
+      </section>
+
+      <!-- Automatic Backup -->
+      <section class="bg-white dark:bg-neutralMid p-8 rounded-3xl shadow-lg space-y-6">
+        <h2 class="text-2xl font-bold text-primary dark:text-secondary text-center">Automatic Backup</h2>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="autoBackupToggle" class="accent-primary w-5 h-5">
+          <span>Enable Automatic Backup</span>
+        </label>
+        <label class="block">
+          <span class="font-medium">Frequency:</span>
+          <select id="backupFrequency" class="w-full mt-1 border rounded-lg p-2 dark:bg-neutralMid dark:text-white" onchange="updateDateInput()">
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </label>
+        <label id="backupDateLabel" class="block">
+          <span class="font-medium">Day / Date:</span>
+          <input type="number" id="backupDate" min="0" max="31" class="mt-1 w-full border rounded-lg p-2 dark:bg-neutralMid dark:text-white">
+        </label>
+        <button onclick="setupAutoBackup()" class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-xl shadow hover:scale-105 transition">Save Settings</button>
+      </section>
+
+      <!-- Recovery -->
+      <section class="bg-white dark:bg-neutralMid p-8 rounded-3xl shadow-lg space-y-6 lg:col-span-2">
+        <h2 class="text-2xl font-bold text-primary dark:text-secondary text-center">Recovery</h2>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col md:flex-row gap-4 items-stretch">
+            <select id="recoverSelect" class="flex-1 p-3 rounded-xl border dark:bg-neutralMid dark:text-white">
+              <option value="" disabled selected>Select type</option>
+              <option value="applicationRounds">Application Rounds</option>
+              <option value="applications">Applications</option>
+              <option value="users">Users</option>
+              <option value="jobs">Jobs</option>
+              <option value="rounds">Rounds</option>
+              <option value="backupHistory">Backup History</option>
+            </select>
+            <label class="relative flex-1">
+              <input type="file" id="recoverFile" multiple class="absolute inset-0 opacity-0 cursor-pointer">
+              <span class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-xl w-full block text-center shadow cursor-pointer hover:scale-105 transition">
+                Choose Files
+              </span>
+            </label>
+            <button onclick="recoverDataDropdown()" class="flex-1 bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-xl shadow hover:scale-105 transition">Recover</button>
+          </div>
+          <div id="fileList" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- Backup History -->
+      <section class="bg-white dark:bg-neutralMid p-8 rounded-3xl shadow-lg lg:col-span-2">
+        <h2 class="text-2xl font-bold mb-6 text-primary dark:text-secondary text-center">Backup History</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto border-collapse border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <thead class="bg-gray-100 dark:bg-neutralDark text-gray-700 dark:text-white">
+              <tr>
+                <th class="border px-4 py-2">#</th>
+                <th class="border px-4 py-2">Type</th>
+                <th class="border px-4 py-2">Date & Time</th>
+                <th class="border px-4 py-2">File</th>
+                <th class="border px-4 py-2">Status</th>
+              </tr>
+            </thead>
+            <tbody id="backupHistory" class="text-sm"></tbody>
+          </table>
+        </div>
+        <div class="flex justify-between items-center mt-6">
+          <button id="prevPage" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg shadow hover:scale-105 transition">Prev</button>
+          <span id="pageInfo" class="font-medium text-gray-700 dark:text-gray-300"></span>
+          <button id="nextPage" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg shadow hover:scale-105 transition">Next</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // Sidebar toggle
+  const toggleBtn = document.getElementById('menu-toggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const menuIcon = document.getElementById('menu-icon');
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+    menuIcon.classList.toggle('fa-bars');
+    menuIcon.classList.toggle('fa-xmark');
+  });
+  overlay.addEventListener('click', () => {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+    menuIcon.classList.add('fa-bars');
+    menuIcon.classList.remove('fa-xmark');
+  });
+
+  // Dark mode
+  document.getElementById('dark-toggle').addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  // Backup & Recovery Logic
+  const keys = ["applicationRounds", "applications", "users", "jobs", "rounds", "backupHistory"];
+  let currentPage = 1, rowsPerPage = 5;
+
+  function showToast(msg, type="success") {
+    Toastify({text: msg, duration:2500, gravity:"top", position:"center",
+      style:{background:type==="error"?"#DC3545":"#28A745"}
+    }).showToast();
+  }
+
+  function backupDataDropdown() {
+    const key = document.getElementById("backupSelect").value;
+    if(!key) return showToast("Select a type to backup","error");
+    backupData(key);
+  }
+  function recoverDataDropdown() {
+    const key = document.getElementById("recoverSelect").value;
+    if(!key) return showToast("Select a type to recover","error");
+    recoverData(key);
+  }
+
+  function backupData(key) {
+    const data = localStorage.getItem(key);
+    if(!data) return showToast(`No data found for ${key}`,"error");
+    const timestamp = new Date().toISOString();
+    const blob = new Blob([data], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${key}_backup_${timestamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    addBackupHistory(key, timestamp, `${key}_backup_${timestamp}.json`, "Backup");
+    showToast(`${key} backup downloaded`);
+  }
+  function bulkBackup() { keys.forEach(k=>backupData(k)); }
+
+  function recoverData(keyFromDropdown=null) {
+    const files = document.getElementById("recoverFile").files;
+    if(!files.length) return showToast("Select file(s) to recover","error");
+    Array.from(files).forEach(file=>{
+      const reader = new FileReader();
+      reader.onload = function(evt){
+        try {
+          const json = JSON.parse(evt.target.result);
+          let key = keyFromDropdown || prompt(`Enter key to restore for ${file.name}:\n${keys.join(", ")}`);
+          if(!keys.includes(key)) return showToast("Invalid key","error");
+          localStorage.setItem(key, JSON.stringify(json));
+          addBackupHistory(key, new Date().toISOString(), file.name, "Recovered");
+          showToast(`${key} restored from ${file.name}`);
+        } catch(err){
+          showToast(`Invalid JSON in ${file.name}`,"error");
+        }
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  function addBackupHistory(type, datetime, file, status="Backup") {
+    let history = JSON.parse(localStorage.getItem("backupHistory")) || [];
+    history.push({type, datetime, file, status});
+    localStorage.setItem("backupHistory", JSON.stringify(history));
+    renderBackupHistory();
+  }
+
+  function renderBackupHistory() {
+    const tbody = document.getElementById("backupHistory");
+    let history = JSON.parse(localStorage.getItem("backupHistory")) || [];
+    history.sort((a,b)=> new Date(b.datetime) - new Date(a.datetime)); // sort newest first
+    const start = (currentPage-1)*rowsPerPage;
+    const end = start+rowsPerPage;
+    const pageData = history.slice(start,end);
+    tbody.innerHTML = "";
+    pageData.forEach((h,i)=>{
+      tbody.innerHTML += `<tr class="hover:bg-gray-50 dark:hover:bg-neutralDark transition">
+        <td class="border px-4 py-2">${start+i+1}</td>
+        <td class="border px-4 py-2 font-medium">${h.type}</td>
+        <td class="border px-4 py-2">${new Date(h.datetime).toLocaleString()}</td>
+        <td class="border px-4 py-2 break-words">${h.file}</td>
+        <td class="border px-4 py-2 font-semibold ${h.status==="Backup"?"text-success":"text-yellow-400"}">${h.status}</td>
+      </tr>`;
+    });
+    document.getElementById("pageInfo").innerText = `Page ${currentPage} of ${Math.ceil(history.length/rowsPerPage)}`;
+  }
+
+  document.getElementById("prevPage").addEventListener("click", ()=>{ if(currentPage>1){ currentPage--; renderBackupHistory(); } });
+  document.getElementById("nextPage").addEventListener("click", ()=>{ const history = JSON.parse(localStorage.getItem("backupHistory")) || []; if(currentPage < Math.ceil(history.length/rowsPerPage)){ currentPage++; renderBackupHistory(); } });
+
+  function setupAutoBackup(){
+    const enabled = document.getElementById("autoBackupToggle").checked;
+    const freq = document.getElementById("backupFrequency").value;
+    const date = document.getElementById("backupDate").value;
+    localStorage.setItem("autoBackupEnabled", enabled);
+    localStorage.setItem("autoBackupFreq", freq);
+    localStorage.setItem("autoBackupDate", date);
+    showToast("Automatic backup settings saved");
+    checkAutoBackup();
+  }
+
+  function updateDateInput(){
+    const freq = document.getElementById("backupFrequency").value;
+    const label = document.getElementById("backupDateLabel");
+    if(freq==="weekly"){
+      label.innerHTML = "Select Weekday (0-Sun,6-Sat):<input type='number' id='backupDate' min='0' max='6' class='mt-1 w-full border rounded-lg p-2 dark:bg-neutralMid dark:text-white'>";
+    } else {
+      label.innerHTML = "Select Date (1-31):<input type='number' id='backupDate' min='1' max='31' class='mt-1 w-full border rounded-lg p-2 dark:bg-neutralMid dark:text-white'>";
+    }
+  }
+
+  function checkAutoBackup(){
+    const enabled = JSON.parse(localStorage.getItem("autoBackupEnabled"));
+    if(!enabled) return;
+    const freq = localStorage.getItem("autoBackupFreq");
+    const date = parseInt(localStorage.getItem("autoBackupDate"));
+    const now = new Date();
+    if((freq==="weekly" && now.getDay()===date) ||
+       (freq==="monthly" && now.getDate()===date) ||
+       (freq==="yearly" && now.getDate()===date && now.getMonth()===0)){
+      bulkBackup();
+    }
+  }
+
+  // Show selected file list
+  document.getElementById("recoverFile").addEventListener("change", function(){
+    const fileList = document.getElementById("fileList");
+    fileList.innerHTML = "";
+    Array.from(this.files).forEach((file, index)=>{
+      const div = document.createElement("div");
+      div.className = "flex items-center justify-between bg-gray-100 dark:bg-neutralLight px-3 py-2 rounded-lg shadow";
+      div.innerHTML = `
+        <span class="text-sm truncate">${file.name}</span>
+        <button class="text-danger hover:text-red-700 transition" onclick="removeFile(${index})">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      fileList.appendChild(div);
+    });
+  });
+
+  // Remove file from input
+  function removeFile(index){
+    const input = document.getElementById("recoverFile");
+    const dt = new DataTransfer();
+    const files = Array.from(input.files);
+    files.splice(index, 1);
+    files.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+    input.dispatchEvent(new Event("change")); // re-render list
+  }
+
+  renderBackupHistory();
+  checkAutoBackup();
+</script>
+</body>
+</html>

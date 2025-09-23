@@ -120,7 +120,7 @@ card.innerHTML = `
 
   <!-- Applied Info -->
   <div class="flex items-center justify-start text-sm text-gray-500 dark:text-gray-300 mt-3 px-5">
-    <span class="flex items-center gap-1"><i class="fa-solid fa-user-check"></i> ${job.applied || 0} Applied</span>
+    <span class="flex items-center gap-1"><i class="fa-solid fa-user-check"></i> ${job.applications.length || 0} Applied</span>
   </div>
 
 
@@ -558,8 +558,10 @@ finishBtn.addEventListener("click", (e)=>{
 
   const selectedSkills = Array.from(document.querySelectorAll("#skills-container input:checked")).map(i=>i.value);
 
+  const id = Date.now().toString(); 
+
   const application = {
-    id: Date.now().toString(),
+    id,
     userId: currentUser.id||"user-unknown",
     jobId: currentJobId,
     name: document.getElementById("app-name").value,
@@ -574,8 +576,11 @@ finishBtn.addEventListener("click", (e)=>{
     roundIds:[]
   };
 
-  const jobs = JSON.parse(localStorage.getItem("jobs")||"[]");
+let jobs = JSON.parse(localStorage.getItem("jobs")||"[]");
   const job = jobs.find(j=>j.id===currentJobId);
+  job.applications.push(id)
+    jobs = jobs.map(j => (j.id === job.id ? job : j));
+  localStorage.setItem("jobs", JSON.stringify(jobs));
   const roundsTable = JSON.parse(localStorage.getItem("rounds")||"[]");
   let applicationRounds = JSON.parse(localStorage.getItem("applicationRounds")||"[]");
 

@@ -7,37 +7,86 @@
   <link rel="stylesheet" href="./style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome & Feather Icons -->
   <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
      <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
+      <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: "#265DF5",
+            secondary: "#0CADF3",
+            darkblue: "#0A1A2F",
+            neutral: {
+              dark: "#0D1B2A",
+              mid: "#1B263B",
+              light: "#415A77",
+            },
+            success: "#28A745",
+            danger: "#DC3545",
+            baselight: "#F4F6FA",
+            white: "#FFFFFF",
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          },
+        },
+      },
+    }
+  </script>
 </head>
-<body class="bg-gray-50 hide-scrollbar">
+<body class="hide-scrollbar font-sans">
 <!-- Loader -->
 <div id="loader" class="bg-gradient-to-br from-blue-50 to-white " >
     <span class="loader"></span>
   </div>
 
   <!-- Navbar -->
-  <nav class="w-full shadow-md fixed top-0 left-0 bg-white z-50">
+  <nav class="w-full shadow-md fixed top-0 left-0 z-50 bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white ">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
+        
+        <!-- Logo -->
         <div class="flex items-center">
-          <span class="text-2xl font-bold text-blue-600">JobHive</span>
+          <span class="text-2xl font-bold text-blue-600 dark:text-blue-400 font-sans">JobHive</span>
         </div>
+
+        <!-- Desktop Links -->
         <div class="hidden md:flex space-x-8">
-          <a href="#" class="nav-link">Why us</a>
-          <a href="#" class="nav-link">About us</a>
+          <a href="#why-us" class="nav-link">Why us</a>
+          <a href="#about" class="nav-link">About us</a>
           <a href="./src/jobs/jobs-list.html" class="nav-link">Jobs</a>
-          <a href="./src//admin/add-job/V2.html" class="nav-link">add jobs</a>
-          <a href="#" class="nav-link">Customers</a>
+          <a href="./src/jobs/jobs-list.html" class="nav-link">Testimonials</a>
+<a href="./src/admin/add-job/V2.html" id="dashboard"
+   class="nav-link opacity-50 pointer-events-none cursor-not-allowed">
+   Dashboard
+</a>
+
+       
         </div>
+
+        <!-- Desktop Right Side -->
         <div class="hidden md:flex items-center space-x-4">
-          <a href="./src/auth/auth-login.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login</a>
+          <!-- Moon Icon -->
+          <button id="dark-toggle" class="text-gray-700 dark:text-gray-200 text-xl focus:outline-none mr-3">
+            <i class="fa-regular fa-moon"></i>
+          </button>
+          <a href="./src/auth/auth-login.html"  id="auth-btn" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg hover:from-secondary hover:to-primary transition-all duration-300 shadow-lg rounded-full">Login/Signup</a>
         </div>
-        <div class="md:hidden">
-          <button id="menu-btn" class="text-gray-700 focus:outline-none">
+
+        <!-- Mobile Right Side -->
+        <div class="md:hidden flex items-center space-x-3">
+          <!-- Moon Icon -->
+          <button id="dark-toggle-mobile" class="text-gray-700 dark:text-gray-200 text-xl focus:outline-none">
+            <i class="fas fa-moon"></i>
+          </button>
+          <!-- Hamburger -->
+          <button id="menu-btn" class="text-gray-700 dark:text-gray-200 focus:outline-none">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
                  viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -49,9 +98,9 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div id="menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out md:hidden z-40">
+    <div id="menu" class="fixed top-0 right-0 h-full w-64 shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out md:hidden z-40 bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white ">
       <div class="p-6 flex flex-col items-center space-y-4 relative">
-        <button id="close-btn" class="absolute top-4 right-4 text-gray-700 hover:text-blue-600">
+        <button id="close-btn" class="absolute top-4 right-4 text-gray-700 dark:text-gray-200 hover:text-blue-600">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
                viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -71,13 +120,14 @@
     </div>
   </nav>
 
+
   <!-- Slider Section -->
   <div id="genworx-slider" class="mt-16"></div>
 
   
  <div class="bg-gradient-to-br from-blue-50 to-white">
 
-<section class="whyus py-20 text-center px-4">
+<section class="whyus py-20 text-center px-4" id="why-us">
   <h2 class="text-4xl font-bold text-[#003366] mb-4 relative inline-block">Why Work With Us
     <span class="block w-16 h-1 bg-blue-600 rounded mt-2 mx-auto"></span>
   </h2>

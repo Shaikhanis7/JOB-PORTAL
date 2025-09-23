@@ -29,6 +29,10 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
+<!-- Notyf -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
 <style>
   body { font-family: 'Poppins', sans-serif; }
 </style>
@@ -69,6 +73,7 @@
           <input type="text" id="fullName" placeholder="Full Name"
                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 bg-baselight text-darkblue focus:ring-2 focus:ring-primary focus:outline-none transition" />
         </div>
+        <p id="error-fullName" class="text-red-500 text-sm hidden"></p>
 
         <!-- Email -->
         <div class="relative">
@@ -76,22 +81,25 @@
           <input type="email" id="email" placeholder="Email address"
                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 bg-baselight text-darkblue focus:ring-2 focus:ring-primary focus:outline-none transition" />
         </div>
+        <p id="error-email" class="text-red-500 text-sm hidden"></p>
 
         <!-- Password -->
         <div class="relative">
           <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <input type="password" id="password" placeholder="Password"
                  class="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-300 bg-baselight text-darkblue focus:ring-2 focus:ring-primary focus:outline-none transition" />
-          <i class="fas fa-eye toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"></i>
+          <i class="fas fa-eye toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer" data-target="password"></i>
         </div>
+        <p id="error-password" class="text-red-500 text-sm hidden"></p>
 
         <!-- Confirm Password -->
         <div class="relative">
           <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <input type="password" id="confirm-password" placeholder="Confirm Password"
                  class="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-300 bg-baselight text-darkblue focus:ring-2 focus:ring-primary focus:outline-none transition" />
-          <i class="fas fa-eye toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"></i>
+          <i class="fas fa-eye toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer" data-target="confirm-password"></i>
         </div>
+        <p id="error-confirm" class="text-red-500 text-sm hidden"></p>
 
         <!-- Sign Up Button -->
         <button type="submit"
@@ -109,19 +117,106 @@
 
   </div>
 
+  <!-- JS -->
   <script>
-    // Password toggle
+    // Toggle password visibility
     document.querySelectorAll(".toggle-password").forEach(icon => {
       icon.addEventListener("click", () => {
-        const input = icon.previousElementSibling;
-        if(input.type === "password") {
-          input.type = "text";
-          icon.classList.replace("fa-eye","fa-eye-slash");
-        } else {
-          input.type = "password";
-          icon.classList.replace("fa-eye-slash","fa-eye");
-        }
+        const targetId = icon.getAttribute("data-target");
+        const input = document.getElementById(targetId);
+        if (!input) return;
+        input.type = input.type === "password" ? "text" : "password";
+        icon.classList.toggle("fa-eye");
+        icon.classList.toggle("fa-eye-slash");
       });
+    });
+
+    // Form Handling
+    const form = document.getElementById("signup-form");
+    const fields = {
+      fullName: document.getElementById("fullName"),
+      email: document.getElementById("email"),
+      password: document.getElementById("password"),
+      confirm: document.getElementById("confirm-password"),
+    };
+    const errors = {
+      fullName: document.getElementById("error-fullName"),
+      email: document.getElementById("error-email"),
+      password: document.getElementById("error-password"),
+      confirm: document.getElementById("error-confirm"),
+    };
+
+    // Notyf instance
+    const notyf = new Notyf({
+      duration: 3000,
+      position: { x: "right", y: "top" },
+      ripple: true
+    });
+
+    // Validation rules
+    const validate = {
+      fullName: val => val ? "" : "Full Name is required.",
+      email: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ? "" : "Enter a valid email.",
+      password: val => val.length >= 6 ? "" : "Password must be at least 6 characters.",
+      confirm: val => val === fields.password.value ? "" : "Passwords do not match.",
+    };
+
+    // Live validation
+    Object.keys(fields).forEach(key => {
+      fields[key].addEventListener("input", () => {
+        const message = validate[key](fields[key].value.trim());
+        errors[key].textContent = message;
+        errors[key].classList.toggle("hidden", !message);
+        fields[key].classList.toggle("border-red-500", !!message);
+      });
+    });
+
+    // On submit
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      let isValid = true;
+
+      Object.keys(fields).forEach(key => {
+        const message = validate[key](fields[key].value.trim());
+        errors[key].textContent = message;
+        errors[key].classList.toggle("hidden", !message);
+        fields[key].classList.toggle("border-red-500", !!message);
+        if (message) isValid = false;
+      });
+
+      if (!isValid) {
+        notyf.error("⚠️ Please fix the errors above");
+        return;
+      }
+
+      // Check if user exists
+      let users = [];
+      try {
+        users = JSON.parse(localStorage.getItem("users")) || [];
+      } catch {
+        users = [];
+      }
+
+      const emailExists = users.some(u => u.email === fields.email.value.trim());
+      if (emailExists) {
+        notyf.error("❌ User already exists with this email");
+        return;
+      }
+
+      // Save new user
+      const user = {
+        id: Date.now().toString(),
+        fullName: fields.fullName.value.trim(),
+        email: fields.email.value.trim(),
+        password: fields.password.value.trim(),
+        role: "user"
+      };
+      users.push(user);
+      localStorage.setItem("users", JSON.stringify(users));
+
+      notyf.success("🎉 Account created successfully!");
+      form.reset();
+      // window.location.href=
     });
   </script>
 

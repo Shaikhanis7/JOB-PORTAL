@@ -1,6 +1,175 @@
 // ==========================
 // Sidebar Toggle
 // ==========================
+const jobs=JSON.parse(localStorage.getItem("jobs"));
+if(jobs==null) 
+{
+    jobs= [
+  {
+    "id": "job1",
+    "title": "Full Stack Developer",
+    "description": "Develop and maintain web applications",
+    "category": "Engineering",
+    "skills": ["Java", "React", "SQL"],
+    "responsibilities": "Build, test, and deploy applications",
+    "location": "Chennai",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 2,
+    "experience": 2,
+    "createdAt": "2025-09-22T09:04:17.566Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job2",
+    "title": "UI/UX Designer",
+    "description": "Design user interfaces and user experiences",
+    "category": "Design",
+    "skills": ["Figma", "Adobe XD", "Creativity"],
+    "responsibilities": "Create wireframes, prototypes, and mockups",
+    "location": "Bangalore",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 1,
+    "experience": 1,
+    "createdAt": "2025-09-22T09:10:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job3",
+    "title": "Digital Marketing Specialist",
+    "description": "Manage online marketing campaigns",
+    "category": "Marketing",
+    "skills": ["SEO", "Google Ads", "Analytics"],
+    "responsibilities": "Optimize campaigns and analyze metrics",
+    "location": "Mumbai",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 1,
+    "experience": 2,
+    "createdAt": "2025-09-22T09:15:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job4",
+    "title": "Sales Executive",
+    "description": "Drive sales and maintain client relationships",
+    "category": "Sales",
+    "skills": ["CRM", "Communication", "Negotiation"],
+    "responsibilities": "Generate leads and close deals",
+    "location": "Hyderabad",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 3,
+    "experience": 1,
+    "createdAt": "2025-09-22T09:20:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job5",
+    "title": "Backend Developer",
+    "description": "Develop and maintain server-side logic",
+    "category": "Engineering",
+    "skills": ["Node.js", "Express", "MongoDB"],
+    "responsibilities": "Build APIs and manage databases",
+    "location": "Pune",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 2,
+    "experience": 3,
+    "createdAt": "2025-09-22T09:25:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job6",
+    "title": "Graphic Designer",
+    "description": "Create visual content for digital platforms",
+    "category": "Design",
+    "skills": ["Photoshop", "Illustrator", "Creativity"],
+    "responsibilities": "Design banners, posters, and social media content",
+    "location": "Chennai",
+    "jobType": "Part-time",
+    "rounds": [],
+    "positions": 1,
+    "experience": 1,
+    "createdAt": "2025-09-22T09:30:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job7",
+    "title": "Content Writer",
+    "description": "Create engaging content for blogs and websites",
+    "category": "Marketing",
+    "skills": ["Writing", "SEO", "Research"],
+    "responsibilities": "Write articles, blog posts, and social media content",
+    "location": "Delhi",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 2,
+    "experience": 2,
+    "createdAt": "2025-09-22T09:35:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job8",
+    "title": "Sales Manager",
+    "description": "Lead sales team and strategy",
+    "category": "Sales",
+    "skills": ["Leadership", "CRM", "Strategy"],
+    "responsibilities": "Manage team and achieve sales targets",
+    "location": "Bangalore",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 1,
+    "experience": 4,
+    "createdAt": "2025-09-22T09:40:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job9",
+    "title": "Frontend Developer",
+    "description": "Develop interactive web interfaces",
+    "category": "Engineering",
+    "skills": ["React", "JavaScript", "CSS"],
+    "responsibilities": "Build UI components and ensure responsiveness",
+    "location": "Kolkata",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 2,
+    "experience": 2,
+    "createdAt": "2025-09-22T09:45:00.000Z",
+    "closedAt": null,
+    "applications": []
+  },
+  {
+    "id": "job10",
+    "title": "Product Designer",
+    "description": "Design and prototype product features",
+    "category": "Design",
+    "skills": ["Figma", "Sketch", "User Research"],
+    "responsibilities": "Collaborate with engineers and PMs for product design",
+    "location": "Mumbai",
+    "jobType": "Full-time",
+    "rounds": [],
+    "positions": 1,
+    "experience": 3,
+    "createdAt": "2025-09-22T09:50:00.000Z",
+    "closedAt": null,
+    "applications": []
+  }
+]
+
+localStorage.setItem("jobs", JSON.stringify(jobs));
+
+}
 const toggleBtn = document.getElementById('menu-toggle');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
@@ -494,6 +663,7 @@ function editJob(id) {
     job.positions = formData.get("positions");
     job.experience = formData.get("experience");
     job.skills = editSkills;
+    job.applications=[];
 
     // Update rounds sequence & local storage
     editRounds.forEach((r,index) => r.sequence = index+1);

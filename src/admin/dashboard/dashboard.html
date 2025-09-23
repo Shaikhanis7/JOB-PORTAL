@@ -22,6 +22,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -31,80 +33,140 @@
             primary: "#265DF5",
             secondary: "#0CADF3",
             darkblue: "#0A1A2F",
-            neutral: { dark: "#0D1B2A", mid: "#1B263B", light: "#415A77" },
+            neutral: {
+              dark: "#0D1B2A",
+              mid: "#1B263B",
+              light: "#415A77",
+            },
             success: "#28A745",
             danger: "#DC3545",
             baselight: "#F4F6FA",
             white: "#FFFFFF",
           },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          },
         },
       },
-    };
+    }
   </script>
 </head>
-<body class="flex h-screen overflow-hidden bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white">
+<body class="flex h-screen overflow-hidden 
+             bg-gradient-to-br from-blue-50 to-white 
+             dark:from-neutral-mid dark:to-neutral-light
+             text-neutral-dark dark:text-white font-sans">
+
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white 
+   <aside id="sidebar" class="bg-gradient-to-br from-blue-50 to-white 
+   dark:from-darkblue dark:to-neutral-dark 
+             text-neutral-dark dark:text-white
     w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] 
     transform -translate-x-full lg:translate-x-0 lg:relative 
     transition-transform duration-300 z-30 shadow-lg">
     
-   <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-    <a href="#" class="flex items-center py-2 px-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-white shadow-md transition">
-      <i class="fas fa-home w-5 mr-2"></i> Dashboard
-    </a>
-    <a href="../add-job/V2.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-      <i class="fas fa-tasks w-5 mr-2"></i> Manage Jobs
-    </a>
-    <a href="../applications-management/applications-management.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-      <i class="fas fa-folder-open w-5 mr-2"></i> Manage Applications
-    </a>
-    <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-      <i class="fas fa-users w-5 mr-2"></i> Candidates
-    </a>
-    <a href="#" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-      <i class="fas fa-cog w-5 mr-2"></i> Settings
-    </a>
-  </nav>
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <a href="../dashboard/dashboard.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-500 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-home w-5 mr-2"></i> Dashboard
+</a>
 
+<a href="../add-job/V2.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-500 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-tasks w-5 mr-2"></i> Manage Jobs
+</a>
+
+<a href="./manage-applications.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-500 ease-in-out
+          bg-gradient-to-r from-primary to-secondary text-white shadow">
+  <i class="fas fa-folder-open w-5 mr-2"></i> Manage Applications
+</a>
+
+<a href="../manage-rounds/manage-rounds.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-300 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-layer-group w-5 mr-2"></i> Rounds Management
+</a>
+
+<a href="./backup-recovery.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-300 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-database w-5 mr-2"></i> Backup & Recovery
+</a>
+
+<a href="./settings.html" 
+   class="flex items-center py-2 px-3 rounded 
+          transition-all duration-300 ease-in-out
+          hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+  <i class="fas fa-cog w-5 mr-2"></i> Settings
+</a>
+
+    </nav>
     <div class="p-4 border-t border-gray-200 dark:border-gray-800">
-      <button class="w-full flex items-center justify-center py-2 px-4 bg-danger hover:bg-red-600 rounded transition">
-        <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
-      </button>
+      <button class="w-full flex items-center justify-center 
+        bg-gradient-to-r from-primary to-secondary 
+        text-white px-4 py-2 rounded-lg 
+        hover:from-secondary hover:to-primary 
+        transform transition-all duration-500 ease-in-out 
+        hover:scale-105 shadow-md">
+  <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
+</button>
+
     </div>
   </aside>
 
+
+
+  
   <!-- Overlay for mobile -->
   <div id="overlay" class="fixed top-16 left-0 right-0 bottom-0 bg-black opacity-50 hidden z-20 lg:hidden"></div>
 
   <!-- Main Content -->
   <div class="flex-1 flex flex-col overflow-hidden">
 
-    <!-- Header -->
+    
     <header class="bg-white dark:bg-neutral-dark shadow fixed top-0 left-0 right-0 z-40 h-16 w-full">
-      <div class="flex items-center justify-between h-full px-4">
-        <div class="flex items-center space-x-3">
-          <button id="menu-toggle" class="lg:hidden rounded-md hover:bg-gray-200 dark:hover:bg-neutral-mid transition box-border">
-            <i id="menu-icon" class="fas fa-bars w-6 h-6 text-neutral-dark dark:text-white"></i>
-          </button>
-          <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white whitespace-nowrap">Job Hive</h2>
-        </div>
-        <div class="flex items-center space-x-3">
-          <!-- Download PDF Button -->
+  <div class="flex items-center justify-between h-full px-6">
+    <div class="flex items-center space-x-4">
+      <!-- Mobile Menu Toggle -->
+      <button id="menu-toggle" class="lg:hidden rounded-md hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
+        <i id="menu-icon" class="fas fa-bars w-6 h-6 text-neutral-dark dark:text-white"></i>
+      </button>
+
+      <!-- Branding -->
+      <div class="flex items-center">
+        <span class="text-xl sm:text-2xl md:text-2xl font-bold 
+                     text-blue-600 dark:text-blue-400 font-sans">
+          JobHive
+        </span>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center space-x-4">
+       <!-- Download PDF Button -->
           <button id="download-pdf" class="bg-primary text-white px-3 py-2 rounded hover:bg-secondary transition">
             <i class="fas fa-file-pdf mr-2"></i> Download PDF
           </button>
+      <!-- Dark Mode Toggle -->
+      <button id="dark-toggle" class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
+        <i class="fas fa-moon w-5 h-5 text-gray-700 dark:text-white"></i>
+      </button>
 
-          <button id="dark-toggle" class="rounded-md p-2 hover:bg-gray-200 dark:hover:bg-neutral-mid transition">
-            <i class="fas fa-moon w-5 h-5 text-gray-700 dark:text-white"></i>
+      <!-- User Avatar -->
+     <button class="rounded-full overflow-hidden w-10 h-10 bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:ring-2 hover:ring-primary transition">
+           <span>A</span>
           </button>
-          <button class="rounded-full overflow-hidden w-10 h-10 bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:ring-2 hover:ring-primary transition">
-            <i class="fas fa-user text-gray-700 dark:text-white"></i>
-          </button>
-        </div>
-      </div>
-    </header>
+    </div>
+  </div>
+</header>
 
     <main class="flex-1 overflow-auto p-6 mt-16">
       <div class="max-w-7xl mx-auto space-y-10" id="dashboard-content">

@@ -292,3 +292,78 @@ window.addEventListener('load', () => {
 
   // Init
   showTestimonial(0);
+
+
+  const darkToggle = document.getElementById("dark-toggle");
+const darkToggleMobile = document.getElementById("dark-toggle-mobile");
+
+function toggleDark() {
+  document.documentElement.classList.toggle("dark");
+  console.log("Hi")
+  localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+}
+
+// Desktop + Mobile
+darkToggle.addEventListener("click", toggleDark);
+darkToggleMobile.addEventListener("click", toggleDark);
+
+// Persist theme
+if (localStorage.getItem("theme") === "dark") {
+  document.documentElement.classList.add("dark");
+}
+
+
+
+
+const dashboardLink = document.querySelector("#dashboard");
+
+// Get login status and role from sessionStorage
+const isLoggedIn = sessionStorage.getItem("isLoggedIn");
+const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+if (currentUser) {
+  // Enable the link
+  dashboardLink.classList.remove("opacity-50", "pointer-events-none", "cursor-not-allowed");
+
+  // Set href based on role
+  if (currentUser.role === "admin") {
+    dashboardLink.setAttribute("href", "./src/admin/dashboard/dashboard.html");
+  } else if (currentUser.role === "user") {
+    dashboardLink.setAttribute("href", ".src/user/dashboard/profile/dashboard-profile.html");
+  }
+} else {
+  // Disable link for not logged-in users
+  dashboardLink.classList.add("opacity-50", "pointer-events-none", "cursor-not-allowed");
+  dashboardLink.setAttribute("href", "#");
+}
+
+
+const authBtn = document.getElementById("auth-btn");
+
+
+function updateAuthButton() {
+  if (isLoggedIn && currentUser) {
+    authBtn.textContent = "Logout";
+    authBtn.href = "#";
+  } else {
+    authBtn.textContent = "Login/Signup";
+    authBtn.href = "./src/auth/auth-login.html";
+  }
+}
+
+// Initial check
+updateAuthButton();
+
+// Logout functionality
+authBtn.addEventListener("click", (e) => {
+  if (isLoggedIn) {
+    e.preventDefault();
+    // Clear storage
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("currentUser");
+    sessionStorage.removeItem("isLoggedIn");
+
+    // Redirect to homepage after logout
+    window.location.href = "./index.html";
+  }
+});

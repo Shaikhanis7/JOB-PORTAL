@@ -35,8 +35,14 @@ form.addEventListener("submit", (e) => {
 
   if(email==="admin@gmail.com" && password=="123456")
   {
+    notyf.success(`🎉 Welcome Admin`);
+    const adminUser = { email, role: "admin", fullName: "Admin" };
+
+    // Save session info in sessionStorage
+    sessionStorage.setItem("currentUser", JSON.stringify(adminUser));
+    sessionStorage.setItem("isLoggedIn", "true");
      setTimeout(() => {
-    window.location.href = "../admin/add-job/index.html";
+    window.location.href = "../admin/dashboard/dashboard.html";
   }, 1000);
 }
   else
@@ -55,6 +61,8 @@ form.addEventListener("submit", (e) => {
 
  
   localStorage.setItem("currentUser", JSON.stringify(foundUser));
+  sessionStorage.setItem("currentUser", JSON.stringify(foundUser));
+  sessionStorage.setItem("isLoggedIn", "true");
 
   notyf.success(`🎉 Welcome back, ${foundUser.fullName}!`);
 
@@ -108,3 +116,9 @@ mobileMenu.addEventListener("click", (e) => {
 
 
 
+
+    const backBtn = document.getElementById("back");
+
+backBtn.addEventListener("click", () => {
+  window.location.href = "../../index.html"; // Change this to your homepage path
+});

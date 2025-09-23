@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobHive CMS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+    <span class="text-2xl font-bold text-blue-600"><i class="fas fa-cubes text-blue-500 mr-2"></i>JobHive CMS</span>
+    <a href="../auth/auth-login.html" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"><i class="fas fa-sign-out-alt mr-1"></i>Logout</a>
+  </nav>
+
+  <main class="flex-1 max-w-7xl mx-auto p-6 space-y-6">
+
+    <!-- Tabs Navigation -->
+    <div class="mb-6 flex flex-wrap gap-4 justify-center md:justify-start">
+      <button class="tab-btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" data-tab="jobs">Jobs</button>
+      <button class="tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition" data-tab="slides">Slides</button>
+      <button class="tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition" data-tab="testimonials">Testimonials</button>
+    </div>
+
+    <!-- Jobs Tab -->
+    <div id="jobs" class="tab-content grid grid-cols-1 gap-6">
+
+      <!-- Filters & Search -->
+      <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <input type="text" id="jobSearch" placeholder="Search by title..." class="flex-1 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500">
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="font-semibold text-gray-700 mr-2">Filter by Location:</span>
+          <div id="locationFilters" class="flex gap-2 flex-wrap"></div>
+        </div>
+        <button id="addToHomeBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex items-center gap-2">
+          <i class="fas fa-home"></i> Add Selected to Home
+        </button>
+      </div>
+
+      <!-- Jobs List -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="jobList" class="space-y-3"></div>
+      </div>
+
+    </div>
+
+    <!-- Slides Tab -->
+    <div id="slides" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Add Slide -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="font-semibold text-xl mb-4 text-blue-600"><i class="fas fa-image mr-2"></i>Add Slide</h3>
+        <form id="slideForm" class="space-y-4">
+          <input type="text" id="slideImage" placeholder="Image URL" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" oninput="updateSlidePreview()">
+          <textarea id="slideText" placeholder="Slide Text" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" oninput="updateSlidePreview()"></textarea>
+          <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"><i class="fas fa-plus mr-1"></i>Add Slide</button>
+        </form>
+        <div class="mt-4">
+          <h4 class="font-semibold text-blue-600 mb-2">Preview</h4>
+          <div id="slidePreview" class="border rounded-lg p-2 bg-gray-50 flex flex-col items-center">
+            <img src="" id="slidePreviewImage" class="max-h-48 object-contain mb-2 hidden" alt="Slide Preview">
+            <p id="slidePreviewText" class="text-gray-700"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Slides -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="font-semibold text-xl mb-4 text-blue-600"><i class="fas fa-images mr-2"></i>Current Slides</h3>
+        <div id="slideList" class="space-y-3 max-h-[500px] overflow-y-auto"></div>
+      </div>
+
+    </div>
+
+    <!-- Testimonials Tab -->
+    <div id="testimonials" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Add Testimonial -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="font-semibold text-xl mb-4 text-blue-600"><i class="fas fa-comment mr-2"></i>Add Testimonial</h3>
+        <form id="testimonialForm" class="space-y-4">
+          <input type="text" id="testimonialName" placeholder="Name" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" oninput="updateTestimonialPreview()">
+          <input type="text" id="testimonialRole" placeholder="Role" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" oninput="updateTestimonialPreview()">
+          <input type="text" id="testimonialImage" placeholder="Avatar URL" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" oninput="updateTestimonialPreview()">
+          <textarea id="testimonialText" placeholder="Testimonial Text" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" oninput="updateTestimonialPreview()"></textarea>
+          <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"><i class="fas fa-plus mr-1"></i>Add Testimonial</button>
+        </form>
+        <div class="mt-4">
+          <h4 class="font-semibold text-blue-600 mb-2">Preview</h4>
+          <div id="testimonialPreview" class="border rounded-lg p-4 bg-gray-50 flex items-center gap-4">
+            <img src="" id="testimonialPreviewImage" class="w-16 h-16 rounded-full object-cover hidden" alt="Avatar">
+            <div>
+              <p class="font-semibold text-gray-800" id="testimonialPreviewName"></p>
+              <p class="text-gray-600 text-sm" id="testimonialPreviewRole"></p>
+              <p class="text-gray-700 mt-1" id="testimonialPreviewText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Existing Testimonials -->
+      <div class="bg-white rounded-2xl shadow-md p-6">
+        <h3 class="font-semibold text-xl mb-4 text-blue-600"><i class="fas fa-comments mr-2"></i>Existing Testimonials</h3>
+        <div id="testimonialList" class="space-y-3 max-h-[500px] overflow-y-auto"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Tabs Script -->
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.replace('bg-blue-600','bg-gray-200') && t.classList.replace('text-white','text-gray-700'));
+        tab.classList.add('bg-blue-600','text-white');
+        contents.forEach(c => c.classList.add('hidden'));
+        document.getElementById(tab.dataset.tab).classList.remove('hidden');
+      });
+    });
+  </script>
+
+  <!-- Jobs / Slides / Testimonials Script -->
+  <script>
+    // ================== Jobs ==================
+    let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+    let selectedJobs = [];
+
+    const jobList = document.getElementById('jobList');
+    const jobSearch = document.getElementById('jobSearch');
+    const locationFiltersDiv = document.getElementById('locationFilters');
+    const addToHomeBtn = document.getElementById('addToHomeBtn');
+
+    function renderLocationFilters() {
+      const locations = [...new Set(jobs.map(j => j.location))];
+      locationFiltersDiv.innerHTML = '';
+      locations.forEach(loc => {
+        const id = `loc-${loc.replace(/\s+/g,'')}`;
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <label class="flex items-center gap-1 cursor-pointer text-gray-700 hover:text-blue-600" title="Filter by ${loc}">
+            <input type="checkbox" id="${id}" value="${loc}" class="h-4 w-4">
+            ${loc}
+          </label>
+        `;
+        locationFiltersDiv.appendChild(div);
+      });
+    }
+
+    function renderJobs() {
+      const searchText = jobSearch.value.toLowerCase();
+      const checkedLocations = Array.from(locationFiltersDiv.querySelectorAll('input:checked')).map(cb => cb.value);
+
+      jobList.innerHTML = '';
+      jobs.forEach((job, idx) => {
+        if (job.title.toLowerCase().includes(searchText) &&
+            (checkedLocations.length === 0 || checkedLocations.includes(job.location))) {
+
+          const selected = selectedJobs.includes(idx);
+          const div = document.createElement('div');
+          div.className = `border rounded-xl p-4 shadow-sm bg-gray-50 hover:shadow-lg transition flex flex-col justify-between relative group`;
+
+          div.innerHTML = `
+            <div class="mb-2">
+              <h4 class="font-semibold text-lg">${job.title} 
+                <i class="fas fa-info-circle text-gray-400 ml-2" title="Click '+' to add to Home Page"></i>
+              </h4>
+              <p class="text-gray-600 text-sm">${job.location} | ${job.type}</p>
+              <p class="text-gray-700 text-sm mt-1">Skills: ${job.skills.join(', ')}</p>
+            </div>
+            <button onclick="toggleSelectJob(${idx})" class="absolute top-3 right-3 text-white px-3 py-1 rounded-lg ${selected ? 'bg-green-600' : 'bg-blue-600'} hover:bg-green-700 transition flex items-center gap-1">
+              <i class="fas ${selected ? 'fa-check' : 'fa-plus'}"></i>
+            </button>
+          `;
+          jobList.appendChild(div);
+        }
+      });
+    }
+
+    function toggleSelectJob(idx) {
+      if (selectedJobs.includes(idx)) selectedJobs = selectedJobs.filter(i=>i!==idx);
+      else selectedJobs.push(idx);
+      renderJobs();
+    }
+
+    addToHomeBtn.addEventListener('click', () => {
+      if(selectedJobs.length === 0) return alert("Select jobs to add to home page!");
+      // Save selected jobs for homepage (example: in localStorage)
+      localStorage.setItem('homeJobs', JSON.stringify(selectedJobs.map(i=>jobs[i])));
+      alert(selectedJobs.length + " job(s) added to Home Page!");
+      selectedJobs = [];
+      renderJobs();
+    });
+
+    jobSearch.addEventListener('input', renderJobs);
+    locationFiltersDiv.addEventListener('change', renderJobs);
+
+    renderLocationFilters();
+    renderJobs();
+
+    // ================== Slides ==================
+    let slides = JSON.parse(localStorage.getItem('slides') || '[]');
+    const slideForm = document.getElementById('slideForm');
+    const slideList = document.getElementById('slideList');
+    const slidePreviewImage = document.getElementById('slidePreviewImage');
+    const slidePreviewText = document.getElementById('slidePreviewText');
+
+    function renderSlides() {
+      slideList.innerHTML = '';
+      slides.forEach((slide, idx) => {
+        const div = document.createElement('div');
+        div.className = 'flex justify-between items-center border rounded-lg p-3 shadow-sm bg-gray-50 hover:bg-gray-100 transition';
+        div.innerHTML = `<div><strong>Slide ${idx+1}</strong>: ${slide.text.substring(0,50)}...</div>
+          <div><button onclick="deleteSlide(${idx})" class="text-red-600 hover:underline"><i class="fas fa-trash-alt"></i></button></div>`;
+        slideList.appendChild(div);
+      });
+    }
+
+    function updateSlidePreview(){
+      const url = document.getElementById('slideImage').value;
+      const text = document.getElementById('slideText').value;
+      slidePreviewText.textContent = text;
+      if(url){ slidePreviewImage.src = url; slidePreviewImage.classList.remove('hidden'); }
+      else slidePreviewImage.classList.add('hidden');
+    }
+
+    function deleteSlide(idx){ slides.splice(idx,1); saveSlides(); }
+    function saveSlides(){ localStorage.setItem('slides', JSON.stringify(slides)); renderSlides(); slideForm.reset(); updateSlidePreview(); }
+
+    slideForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      slides.push({
+        image: document.getElementById('slideImage').value,
+        text: document.getElementById('slideText').value
+      });
+      saveSlides();
+    });
+    renderSlides();
+
+    // ================== Testimonials ==================
+    let testimonials = JSON.parse(localStorage.getItem('testimonials') || '[]');
+    const testimonialForm = document.getElementById('testimonialForm');
+    const testimonialList = document.getElementById('testimonialList');
+    const tPreviewImage = document.getElementById('testimonialPreviewImage');
+    const tPreviewName = document.getElementById('testimonialPreviewName');
+    const tPreviewRole = document.getElementById('testimonialPreviewRole');
+    const tPreviewText = document.getElementById('testimonialPreviewText');
+
+    function renderTestimonials() {
+      testimonialList.innerHTML = '';
+      testimonials.forEach((t, idx)=>{
+        const div = document.createElement('div');
+        div.className = 'flex justify-between items-center border rounded-lg p-3 shadow-sm bg-gray-50 hover:bg-gray-100 transition';
+        div.innerHTML = `<div><strong>${t.name}</strong> - ${t.role}</div>
+          <div><button onclick="deleteTestimonial(${idx})" class="text-red-600 hover:underline"><i class="fas fa-trash-alt"></i></button></div>`;
+        testimonialList.appendChild(div);
+      });
+    }
+
+    function updateTestimonialPreview(){
+      const img = document.getElementById('testimonialImage').value;
+      tPreviewImage.src = img;
+      tPreviewImage.classList.toggle('hidden', !img);
+      tPreviewName.textContent = document.getElementById('testimonialName').value;
+      tPreviewRole.textContent = document.getElementById('testimonialRole').value;
+      tPreviewText.textContent = document.getElementById('testimonialText').value;
+    }
+
+    function deleteTestimonial(idx){ testimonials.splice(idx,1); saveTestimonials(); }
+    function saveTestimonials(){ localStorage.setItem('testimonials', JSON.stringify(testimonials)); renderTestimonials(); testimonialForm.reset(); updateTestimonialPreview(); }
+
+    testimonialForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      testimonials.push({
+        name: document.getElementById('testimonialName').value,
+        role: document.getElementById('testimonialRole').value,
+        image: document.getElementById('testimonialImage').value,
+        text: document.getElementById('testimonialText').value
+      });
+      saveTestimonials();
+    });
+    renderTestimonials();
+  </script>
+
+</body>
+</html>

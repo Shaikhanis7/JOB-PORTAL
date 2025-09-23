@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Job Hive Dashboard</title>
+  <title>Job Hive Dashboard - Rounds Management</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Font Awesome -->
@@ -15,23 +15,22 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-  <!-- SheetJS for Excel -->
+  <!-- SheetJS -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
+  <!-- Fonts & Tailwind Config -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
             primary: "#265DF5",
             secondary: "#0CADF3",
             darkblue: "#0A1A2F",
-            neutral: {
-              dark: "#0D1B2A",
-              mid: "#1B263B",
-              light: "#415A77",
-            },
+            neutral: { dark: "#0D1B2A", mid: "#1B263B", light: "#415A77" },
             success: "#28A745",
             danger: "#DC3545",
             baselight: "#F4F6FA",
@@ -42,46 +41,27 @@
     };
   </script>
 </head>
-<body class="flex h-screen overflow-hidden bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white">
+<body class="flex h-screen overflow-hidden font-sans bg-basolight dark:bg-neutral-dark text-neutral-dark dark:text-white">
 
   <!-- Sidebar -->
-   <!-- Sidebar -->
-  <aside id="sidebar" class="bg-white dark:bg-neutral-dark text-neutral-dark dark:text-white 
-    w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] 
-    transform -translate-x-full lg:translate-x-0 lg:relative 
-    transition-transform duration-300 z-30 shadow-lg">
-    
-   <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-  <!-- Dashboard with gradient hover -->
-  <a href="../dashboard/dashboard.html" 
-   class="flex items-center py-2 px-3 rounded transition hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
-  <i class="fas fa-home w-5 mr-2"></i> Dashboard
-</a>
-
-<a href="../add-job/V2.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
-      <i class="fas fa-tasks w-5 mr-2"></i> Manage Jobs
-    </a>
-
-
-<a href="../applications-management/applications-management.html" 
-   class="flex items-center py-2 px-3 rounded transition hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
-    <i class="fas fa-folder-open w-5 mr-2"></i> Manage Applications
-</a>
-
-<a href="#" 
-   class="flex items-center py-2 px-3 rounded bg-gradient-to-r from-primary to-secondary text-white shadow">
-   <i class="fas fa-layer-group w-5 mr-2"></i> Rounds Management
- 
-</a>
-
-
-<a href="./settings.html" 
-   class="flex items-center py-2 px-3 rounded transition hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
-  <i class="fas fa-cog w-5 mr-2"></i> Settings
-</a>
-
-</nav>
-
+  <aside id="sidebar" class="bg-white dark:bg-neutral-dark w-64 flex flex-col fixed top-16 left-0 h-[calc(100%-4rem)] transform -translate-x-full lg:translate-x-0 lg:relative transition-transform duration-300 z-30 shadow-lg">
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <a href="../dashboard/dashboard.html" class="flex items-center py-2 px-3 rounded transition hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+        <i class="fas fa-home w-5 mr-2"></i> Dashboard
+      </a>
+      <a href="../add-job/V2.html" class="flex items-center py-2 px-3 rounded hover:bg-primary hover:text-white transition">
+        <i class="fas fa-tasks w-5 mr-2"></i> Manage Jobs
+      </a>
+      <a href="../applications-management/applications-management.html" class="flex items-center py-2 px-3 rounded transition hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+        <i class="fas fa-folder-open w-5 mr-2"></i> Manage Applications
+      </a>
+      <a href="#" class="flex items-center py-2 px-3 rounded bg-gradient-to-r from-primary to-secondary text-white shadow">
+        <i class="fas fa-layer-group w-5 mr-2"></i> Rounds Management
+      </a>
+      <a href="./settings.html" class="flex items-center py-2 px-3 rounded transition hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white">
+        <i class="fas fa-cog w-5 mr-2"></i> Settings
+      </a>
+    </nav>
     <div class="p-4 border-t border-gray-200 dark:border-gray-800">
       <button class="w-full flex items-center justify-center py-2 px-4 bg-danger hover:bg-red-600 rounded transition">
         <i class="fas fa-sign-out-alt w-5 mr-2"></i> Logout
@@ -116,7 +96,6 @@
 
       <!-- Control Bar -->
       <div class="bg-white dark:bg-neutral-dark p-4 rounded-lg shadow-md mb-6 flex flex-wrap gap-3 items-center">
-        
         <!-- Filters -->
         <select id="jobFilter" class="border rounded p-2 dark:bg-neutral-800 dark:text-white">
           <option value="">Filter by Job</option>
@@ -136,25 +115,29 @@
 
         <!-- Threshold -->
         <input type="number" id="thresholdInput" placeholder="Set Threshold" class="border rounded p-2 w-40 dark:bg-neutral-800 dark:text-white"/>
-        <button onclick="applyThreshold()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 flex items-center">
-          <i class="fa-solid fa-sliders mr-2"></i>Apply
+        <button onclick="applyThreshold()" class="bg-primary text-white px-4 py-2 rounded hover:bg-secondary flex items-center">
+          <i class="fa-solid fa-sliders mr-2"></i> Apply Threshold
         </button>
+      </div>
 
-        <!-- Upload & Download -->
-        <input type="file" id="bulkUpload" accept=".xlsx" class="hidden" />
-        <button onclick="document.getElementById('bulkUpload').click()" 
-                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center">
-          <i class="fa-solid fa-upload mr-2"></i>Upload Excel
-        </button>
-        <button onclick="downloadExcel()" 
-                class="bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center">
-          <i class="fa-solid fa-download mr-2"></i>Download Excel
-        </button>
+      <!-- Bulk Upload Section -->
+      <div class="bg-white dark:bg-neutral-dark p-4 rounded-lg shadow-md mb-6">
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">Bulk Marks Upload</h3>
+        <div class="flex gap-3">
+          <input type="file" id="bulkUpload" accept=".xlsx" class="hidden" />
+          <button onclick="document.getElementById('bulkUpload').click()" class="bg-secondary text-white px-4 py-2 rounded hover:bg-primary flex items-center">
+            <i class="fa-solid fa-upload mr-2"></i> Upload Excel
+          </button>
+          <button onclick="downloadExcel()" class="bg-primary text-white px-4 py-2 rounded hover:bg-secondary flex items-center">
+            <i class="fa-solid fa-download mr-2"></i> Download Excel
+          </button>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-neutral-light mt-2">Upload marks in Excel format to update multiple candidates at once.</p>
       </div>
 
       <!-- Table -->
       <div class="overflow-x-auto bg-white dark:bg-neutral-dark shadow-md rounded-lg">
-        <table class="min-w-full border-collapse">
+        <table class="min-w-full border-collapse text-sm">
           <thead>
             <tr class="bg-primary text-white">
               <th class="p-3 border">Name</th>
@@ -176,7 +159,10 @@
     </main>
   </div>
 
-  <script>
+  <!-- JS -->
+  
+
+<script>
   // ========================== Sidebar Toggle ==========================
   const toggleBtn = document.getElementById('menu-toggle');
   const sidebar = document.getElementById('sidebar');
@@ -216,9 +202,13 @@
       status: "Pending"
     }
   ];
+
+  let allRounds = JSON.parse(localStorage.getItem("rounds")) || []; // optional if needed
+
   function saveData() {
     localStorage.setItem("applicationRounds", JSON.stringify(applicationRounds));
   }
+
   function showToast(msg, type="success") {
     Toastify({
       text: msg,
@@ -230,22 +220,75 @@
       }
     }).showToast();
   }
+// ========================== Filters ==========================
+const jobFilter = document.getElementById("jobFilter");
+const locationFilter = document.getElementById("locationFilter");
+const roundFilter = document.getElementById("roundFilter");
+const statusFilter = document.getElementById("statusFilter");
 
-  // ========================== Filters ==========================
-  const jobFilter = document.getElementById("jobFilter");
-  const locationFilter = document.getElementById("locationFilter");
-  const roundFilter = document.getElementById("roundFilter");
-  const statusFilter = document.getElementById("statusFilter");
+function renderFilters() {
+  // Get unique jobs and locations from applicationRounds
+  let jobs = [...new Set(applicationRounds.map(r => r.jobTitle))];
+  let locations = [...new Set(applicationRounds.map(r => r.location))];
 
-  function renderFilters() {
-    let jobs = [...new Set(applicationRounds.map(r => r.jobTitle))];
-    let locations = [...new Set(applicationRounds.map(r => r.location))];
-    let rounds = [...new Set(applicationRounds.map(r => r.roundName))];
+  // Populate Job & Location filters
+  jobFilter.innerHTML = `<option value="">Filter by Job</option>` + jobs.map(j => `<option>${j}</option>`).join("");
+  locationFilter.innerHTML = `<option value="">Filter by Location</option>` + locations.map(l => `<option>${l}</option>`).join("");
 
-    jobFilter.innerHTML = `<option value="">Filter by Job</option>` + jobs.map(j => `<option>${j}</option>`).join("");
-    locationFilter.innerHTML = `<option value="">Filter by Location</option>` + locations.map(l => `<option>${l}</option>`).join("");
-    roundFilter.innerHTML = `<option value="">Filter by Round</option>` + rounds.map(r => `<option>${r}</option>`).join("");
+  // Initially, populate Round filter with all rounds
+  const allRoundNames = [...new Set(allRounds.map(r => r.roundName))];
+  roundFilter.innerHTML = `<option value="">Filter by Round</option>` + allRoundNames.map(r => `<option>${r}</option>`).join("");
+}
+
+// Update Round filter based on selected Job & Location
+function updateRoundFilter() {
+  // If no job/location selected, show all rounds
+  if (!jobFilter.value && !locationFilter.value) {
+    const allRoundNames = [...new Set(allRounds.map(r => r.roundName))];
+    roundFilter.innerHTML = `<option value="">Filter by Round</option>` + allRoundNames.map(r => `<option>${r}</option>`).join("");
+    return;
   }
+
+  // Find jobIds for selected Job & Location
+  const jobIdSet = new Set(
+    applicationRounds
+      .filter(r => (!jobFilter.value || r.jobTitle === jobFilter.value) &&
+                   (!locationFilter.value || r.location === locationFilter.value))
+      .map(r => r.jobId)
+  );
+
+  // Filter rounds based on these jobIds
+  const filteredRounds = allRounds.filter(r => jobIdSet.has(r.jobId));
+
+  // Get unique round names
+  const uniqueRounds = [];
+  const roundNameSet = new Set();
+  filteredRounds.forEach(r => {
+    if (!roundNameSet.has(r.roundName)) {
+      roundNameSet.add(r.roundName);
+      uniqueRounds.push(r);
+    }
+  });
+
+  roundFilter.innerHTML = `<option value="">Filter by Round</option>` + uniqueRounds.map(r => `<option>${r.roundName}</option>`).join("");
+}
+
+// ========================== Event Listeners ==========================
+jobFilter.addEventListener("change", () => {
+  currentPage = 1;
+  updateRoundFilter();
+  renderTable();
+});
+
+locationFilter.addEventListener("change", () => {
+  currentPage = 1;
+  updateRoundFilter();
+  renderTable();
+});
+
+// Call on page load
+renderFilters();
+updateRoundFilter();
 
   // ========================== Table & Pagination ==========================
   let currentPage = 1;
@@ -312,186 +355,111 @@
   }
 
   // ========================== Mark Update ==========================
-function updateMark(id) {
-  const input = document.querySelector(`input[data-id="${id}"]`);
-  const round = applicationRounds.find(r => r.id === id);
+  function updateMark(id) {
+    const input = document.querySelector(`input[data-id="${id}"]`);
+    const round = applicationRounds.find(r => r.id === id);
+    if (!round) return;
 
-  if (!round) return;
+    const candidateRounds = applicationRounds
+      .filter(r => r.email === round.email && r.jobTitle === round.jobTitle)
+      .sort((a, b) => a.roundOrder - b.roundOrder);
 
-  const candidateRounds = applicationRounds
-    .filter(r => r.email === round.email && r.jobTitle === round.jobTitle)
-    .sort((a, b) => a.roundOrder - b.roundOrder);
+    const currentIndex = candidateRounds.findIndex(r => r.id === id);
 
-  const currentIndex = candidateRounds.findIndex(r => r.id === id);
-
-  // ✅ Check if previous rounds are passed
-  if (currentIndex > 0) {
-    const prevRounds = candidateRounds.slice(0, currentIndex);
-    const failedPrev = prevRounds.find(r => r.status !== "Pass");
-
-    if (failedPrev) {
-      showToast(
-        `Cannot update ${round.roundName}. Previous round "${failedPrev.roundName}" is not Pass.`,
-        "error"
-      );
-      return;
+    // Check previous rounds
+    if (currentIndex > 0) {
+      const failedPrev = candidateRounds.slice(0, currentIndex).find(r => r.status !== "Pass");
+      if (failedPrev) { showToast(`Cannot update ${round.roundName}. Previous round "${failedPrev.roundName}" is not Pass.`, "error"); return; }
     }
+
+    // Check future rounds
+    const passedFuture = candidateRounds.slice(currentIndex + 1).find(r => r.status === "Pass");
+    if (passedFuture) { showToast(`Cannot update ${round.roundName}. Later round "${passedFuture.roundName}" is already Pass.`, "error"); return; }
+
+    // Update
+    round.marks = parseInt(input.value) || null;
+    round.status = (round.marks === null || round.thresholdMark === undefined) ? "Pending" : (round.marks >= round.thresholdMark ? "Pass" : "Fail");
+
+    if (round.applicationId) updateApplicationStatus(round.applicationId);
+
+    saveData();
+    renderTable();
+    showToast("Mark updated");
   }
-
-  // ✅ Check if any future round is already "Pass"
-  const futureRounds = candidateRounds.slice(currentIndex + 1);
-  const passedFuture = futureRounds.find(r => r.status === "Pass");
-
-  if (passedFuture) {
-    showToast(
-      `Cannot update ${round.roundName}. A later round "${passedFuture.roundName}" is already marked as Pass.`,
-      "error"
-    );
-    return;
-  }
-
-  // ✅ Now allow updating
-  round.marks = parseInt(input.value) || null;
-
-  if (round.marks === null || round.thresholdMark === undefined) {
-    round.status = "Pending";
-  } else {
-    round.status = round.marks >= round.thresholdMark ? "Pass" : "Fail";
-  }
-
-  if (round.applicationId) {
-  updateApplicationStatus(round.applicationId);
-}
-
-  saveData();
-  renderTable();
-  showToast("Mark updated");
-}
-
 
   // ========================== Threshold ==========================
- function applyThreshold() {
-  const val = parseInt(document.getElementById("thresholdInput").value);
-  if (isNaN(val)) {
-    showToast("Please enter a valid threshold", "error");
-    return;
-  }
+  function applyThreshold() {
+    const val = parseInt(document.getElementById("thresholdInput").value);
+    if (isNaN(val)) { showToast("Please enter a valid threshold", "error"); return; }
+    if (jobFilter.value=="" || locationFilter.value=="" || roundFilter.value=="") { showToast("Apply all filters before setting threshold", "error"); return; }
 
+    const filtered = applicationRounds.filter(r => 
+      (!jobFilter.value || r.jobTitle === jobFilter.value) &&
+      (!locationFilter.value || r.location === locationFilter.value) &&
+      (!roundFilter.value || r.roundName === roundFilter.value)
+    );
 
-   
-   if (jobFilter.value=="" || locationFilter.value =="" || roundFilter.value=="") {
-    showToast("Please apply a all filters before setting threshold", "error");
-    return;
-  }
+    if (filtered.length === 0) { showToast("No filtered records to apply threshold", "error"); return; }
 
-  // Get the filtered dataset just like renderTable()
-  let filtered = applicationRounds.filter(r => {
-    return (!jobFilter.value || r.jobTitle === jobFilter.value) &&
-           (!locationFilter.value || r.location === locationFilter.value) &&
-           (!roundFilter.value || r.roundName === roundFilter.value)
-  });
-
-  if (filtered.length === 0) {
-    showToast("No filtered records to apply threshold", "error");
-    return;
-  }
-
-  // Apply threshold ONLY to filtered rows
-  filtered.forEach(r => {
-    r.thresholdMark = val;
-    if (r.marks !== null) {
-      r.status = r.marks >= val ? "Pass" : "Fail";
-    }
-  });
-
-  saveData();
-  renderTable();
-  showToast("Threshold applied to filtered records");
-}
-
-
-  // ========================== Excel Upload ==========================
-  function handleBulkUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    const data = new Uint8Array(evt.target.result);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet);
-
-    let errorCount = 0;
-
-    rows.forEach(row => {
-      let round = applicationRounds.find(
-        r => r.email === row.Email && r.name === row.Name
-      );
-
-      if (!round) return; // Skip if not found
-
-      // Save prior state
-      const prevMarks = round.marks;
-      const prevStatus = round.status;
-
-      // Get all rounds of candidate
-      const candidateRounds = applicationRounds
-        .filter(r => r.email === round.email && r.jobTitle === round.jobTitle)
-        .sort((a, b) => a.roundOrder - b.roundOrder);
-
-      const currentIndex = candidateRounds.findIndex(r => r.id === round.id);
-
-      // Check if previous rounds are Pass
-      if (currentIndex > 0) {
-        const prevRounds = candidateRounds.slice(0, currentIndex);
-        const failedPrev = prevRounds.find(r => r.status !== "Pass");
-
-        if (failedPrev) {
-          // Revert to prior state
-          round.marks = prevMarks;
-          round.status = prevStatus;
-
-          showToast(
-            `Upload error → ${round.name} (${round.email}), Round: ${round.roundName}. Reason: Previous round "${failedPrev.roundName}" not Pass.`,
-            "error"
-          );
-          errorCount++;
-          return;
-        }
-      }
-
-      // Apply marks update
-      round.marks = parseInt(row.Marks) || null;
-      if (round.marks === null || round.thresholdMark === undefined) {
-        round.status = "Pending";
-      } else {
-        round.status = round.marks >= round.thresholdMark ? "Pass" : "Fail";
-      }
+    filtered.forEach(r => {
+      r.thresholdMark = val;
+      if (r.marks !== null) r.status = r.marks >= val ? "Pass" : "Fail";
     });
 
     saveData();
     renderTable();
+    showToast("Threshold applied to filtered records");
+  }
 
-    if (errorCount > 0) {
-      showToast(`${errorCount} record(s) failed to update. Check logs.`, "error");
-    } else {
-      showToast("Excel uploaded & applied");
-    }
+  // ========================== Excel Upload ==========================
+  document.getElementById('bulkUpload').addEventListener('change', handleBulkUpload);
+  function handleBulkUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    e.target.value = ""; // Reset input
-  };
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const data = new Uint8Array(evt.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet);
+      let errorCount = 0;
 
-  reader.readAsArrayBuffer(file);
-}
+      rows.forEach(row => {
+        const round = applicationRounds.find(r => r.email === row.Email && r.name === row.Name);
+        if (!round) return;
+
+        const prevMarks = round.marks;
+        const prevStatus = round.status;
+
+        const candidateRounds = applicationRounds
+          .filter(r => r.email === round.email && r.jobTitle === round.jobTitle)
+          .sort((a, b) => a.roundOrder - b.roundOrder);
+
+        const currentIndex = candidateRounds.findIndex(r => r.id === round.id);
+        if (currentIndex > 0) {
+          const failedPrev = candidateRounds.slice(0, currentIndex).find(r => r.status !== "Pass");
+          if (failedPrev) { round.marks = prevMarks; round.status = prevStatus; showToast(`Upload error → ${round.name} (${round.email}), Round: ${round.roundName}. Previous round "${failedPrev.roundName}" not Pass.`, "error"); errorCount++; return; }
+        }
+
+        round.marks = parseInt(row.Marks) || null;
+        round.status = (round.marks === null || round.thresholdMark === undefined) ? "Pending" : (round.marks >= round.thresholdMark ? "Pass" : "Fail");
+      });
+
+      saveData();
+      renderTable();
+      showToast(errorCount>0 ? `${errorCount} record(s) failed to update.` : "Excel uploaded & applied");
+      e.target.value = "";
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
   // ========================== Excel Download ==========================
   function downloadExcel() {
-    let filtered = getFilteredData();
-    if (filtered.length === 0) {
-      showToast("No records for filter", "error");
-      return;
-    }
-    let data = filtered.map(r => ({
+    const filtered = getFilteredData();
+    if (filtered.length === 0) { showToast("No records for filter", "error"); return; }
+
+    const data = filtered.map(r => ({
       Name: r.name,
       Email: r.email,
       Job: r.jobTitle,
@@ -500,51 +468,35 @@ function updateMark(id) {
       Threshold: r.thresholdMark ?? "",
       Status: r.status
     }));
+
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Applications");
     XLSX.writeFile(wb, "filtered_application_rounds.xlsx");
   }
 
+  // ========================== Update Application Status ==========================
+  function updateApplicationStatus(applicationId) {
+    let applications = JSON.parse(localStorage.getItem("applications")) || [];
+    const app = applications.find(a => a.id === applicationId);
+    if (!app) return;
+
+    const rounds = applicationRounds.filter(r => r.applicationId === applicationId).sort((a, b) => a.roundOrder - b.roundOrder);
+    if (rounds.length === 0) return;
+
+    const lastRound = rounds[rounds.length - 1];
+    if (lastRound.status === "Pass") app.status = "Selected";
+    else if (rounds.some(r => r.status === "Fail")) app.status = "Rejected";
+    else app.status = "In Progress";
+
+    localStorage.setItem("applications", JSON.stringify(applications));
+  }
+
   // ========================== Init ==========================
   renderFilters();
   renderTable();
-  [jobFilter, locationFilter, roundFilter, statusFilter].forEach(f => {
-    f.addEventListener("change", () => { currentPage = 1; renderTable(); });
-  });
+  [jobFilter, locationFilter, roundFilter, statusFilter].forEach(f => f.addEventListener("change", () => { currentPage=1; renderTable(); }));
+</script>
 
-
-  //Update Application Status
-
-
-  function updateApplicationStatus(applicationId) {
-  let applications = JSON.parse(localStorage.getItem("applications")) || [];
-
-  // find the application
-  let app = applications.find(a => a.id === applicationId);
-  if (!app) return;
-
-  // get all rounds for this application
-  let rounds = applicationRounds
-    .filter(r => r.applicationId === applicationId)
-    .sort((a, b) => a.Number - b.Number);
-
-  if (rounds.length === 0) return;
-
-  // check final round
-  let lastRound = rounds[rounds.length - 1];
-  if (lastRound.status === "Pass") {
-    app.status = "Selected";  // or "Pass"
-  } else if (rounds.some(r => r.status === "Fail")) {
-    app.status = "Rejected";  // fail in any round
-  } else {
-    app.status = "In Progress";
-  }
-
-  // save back
-  localStorage.setItem("applications", JSON.stringify(applications));
-}
-
-  </script>
 </body>
 </html>

@@ -141,110 +141,144 @@
           </div>
         </div>
       </div>
-
-      <!-- Job Form -->
-     <div id="job-form" class="hidden mt-4 bg-white dark:bg-neutral-dark p-6 rounded-lg shadow-lg">
-  <h3 class="text-lg font-semibold mb-4" id="form-title">Add Job</h3>
+<!-- Job Form -->
+<div id="job-form" class="hidden mt-6 bg-white dark:bg-neutral-dark p-6 rounded-lg shadow-lg max-w-5xl mx-auto">
+  <h3 class="text-xl font-semibold mb-6 text-gray-800 dark:text-white">Add Job</h3>
 
   <form id="create-job-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    
     <!-- Job Title -->
-    <div class="col-span-1">
+    <div>
+      <label for="job-title" class="block mb-1 font-medium text-gray-700 dark:text-white">Job Title</label>
       <input type="text" id="job-title" placeholder="Enter Job Title" required
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
+        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+               text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary outline-none" />
     </div>
 
     <!-- Category -->
-    <div class="col-span-1">
+    <div>
+      <label for="job-category" class="block mb-1 font-medium text-gray-700 dark:text-white">Category</label>
       <input type="text" id="job-category" placeholder="Category"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
+        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+               text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary outline-none" />
     </div>
 
-    <!-- Job Description (Full Width) -->
-    <div class="col-span-1 md:col-span-2">
+    <!-- Job Description -->
+    <div class="md:col-span-2">
+      <label for="job-description" class="block mb-1 font-medium text-gray-700 dark:text-white">Job Description</label>
       <textarea id="job-description" placeholder="Enter Job Description" required
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-28"></textarea>
+        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+               text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-28 focus:ring-2 focus:ring-primary outline-none"></textarea>
     </div>
 
-    <!-- Skills Input (Full Width) -->
-    <div class="col-span-1 md:col-span-2 space-y-3">
-      <label class="block font-medium text-gray-700 dark:text-white">Skills</label>
-      <div class="flex items-center space-x-2">
+    <!-- Skills Input -->
+    <div class="md:col-span-2">
+      <label class="block mb-1 font-medium text-gray-700 dark:text-white">Skills</label>
+      <div class="flex flex-col sm:flex-row gap-2">
         <input type="text" id="skill-input" placeholder="Enter a skill"
           class="flex-1 p-3 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white 
                  border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none" />
         <button type="button" id="add-skill-btn"
-          class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                 hover:bg-blue-600 transition">
+          class="w-full sm:w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-blue-600 transition">
           <i class="fas fa-plus"></i>
         </button>
       </div>
-      <div id="skills-container" class="flex flex-wrap gap-2"></div>
+      <div id="skills-container" class="flex flex-wrap gap-2 mt-2"></div>
     </div>
 
-    <!-- Responsibilities (Full Width) -->
-    <div class="col-span-1 md:col-span-2">
+    <!-- Responsibilities -->
+    <div class="md:col-span-2">
+      <label for="job-responsibilities" class="block mb-1 font-medium text-gray-700 dark:text-white">Responsibilities</label>
       <textarea id="job-responsibilities" placeholder="Responsibilities"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-28"></textarea>
+        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+               text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-28 focus:ring-2 focus:ring-primary outline-none"></textarea>
     </div>
 
     <!-- Location -->
-    <div class="col-span-1">
+    <div>
+      <label for="job-location" class="block mb-1 font-medium text-gray-700 dark:text-white">Location</label>
       <input type="text" id="job-location" placeholder="Location"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
+        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+               text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary outline-none" />
     </div>
 
     <!-- Job Type -->
-    <div class="col-span-1">
-  <select id="job-type" 
-    class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-           dark:bg-neutral-mid text-gray-700 dark:text-white focus:ring-2 focus:ring-primary outline-none">
-    <option value="" disabled selected>Select Job Type</option>
-    <option value="Full-time">Full-time</option>
-    <option value="Part-time">Part-time</option>
-    <option value="Internship">Internship</option>
-  </select>
-</div>
+    <div>
+      <label for="job-type" class="block mb-1 font-medium text-gray-700 dark:text-white">Job Type</label>
+      <select id="job-type"
+        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+               text-gray-700 dark:text-white focus:ring-2 focus:ring-primary outline-none">
+        <option value="" disabled selected>Select Job Type</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Internship">Internship</option>
+      </select>
+    </div>
 
     <!-- Rounds -->
-    <div class="col-span-1">
-      <input type="text" id="job-rounds" placeholder="Rounds"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
-    </div>
+    <!-- Rounds -->
+<div class="md:col-span-2">
+  <label class="block mb-1 font-medium text-gray-700 dark:text-white">Rounds</label>
+  
+  <!-- Step 1: Number of rounds and confirm button -->
+  <div class="flex flex-col sm:flex-row gap-2">
+    <input type="number" id="round-count" min="1" placeholder="No. of rounds"
+      class="flex-1 p-3 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white 
+             border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none" />
+    <button type="button" id="confirm-round-count"
+      class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-600 transition w-full sm:w-auto">
+      Confirm
+    </button>
+  </div>
 
-    <!-- Positions -->
-    <div class="col-span-1">
-      <input type="number" id="job-positions" placeholder="Positions"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
-    </div>
+  <!-- Step 2: Add round names (hidden initially) -->
+  <div id="round-input-area" class="hidden flex flex-col sm:flex-row gap-2 mt-2">
+    <input type="text" id="round-input" placeholder="Enter round name"
+      class="flex-1 p-3 border rounded-lg bg-white dark:bg-neutral-mid text-gray-800 dark:text-white 
+             border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none" />
+    <button type="button" id="add-round-btn"
+      class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white hover:bg-blue-600 transition">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
 
-    <!-- Experience -->
-    <div class="col-span-1 md:col-span-2">
-      <input type="text" id="job-experience" placeholder="Experience"
-        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white 
-               dark:bg-neutral-mid text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" />
-    </div>
+  <!-- Step 3: Display added rounds -->
+  <div id="rounds-container" class="flex flex-wrap gap-2 mt-2"></div>
+  <p id="round-limit-msg" class="text-sm text-gray-500 dark:text-gray-400 mt-1"></p>
+</div>
+
+
+ <!-- Positions & Experience -->
+<div class="md:flex md:gap-4">
+  <!-- Positions -->
+  <div class="md:flex-1">
+    <label for="job-positions" class="block mb-1 font-medium text-gray-700 dark:text-white">Positions</label>
+    <input type="number" id="job-positions" placeholder="Positions"
+      class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+             text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary outline-none" />
+  </div>
+
+  <!-- Experience -->
+  <div class="md:flex-1 mt-4 md:mt-0">
+    <label for="job-experience" class="block mb-1 font-medium text-gray-700 dark:text-white">Experience</label>
+    <input type="text" id="job-experience" placeholder="Experience"
+      class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-mid 
+             text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary outline-none" />
+  </div>
+</div>
+
 
     <!-- Action Buttons -->
-    <div class="col-span-1 md:col-span-2 flex justify-end space-x-3 pt-4">
+    <div class="md:col-span-2 flex flex-col sm:flex-row justify-start gap-3 pt-4">
       <button type="button" id="cancel-job"
-        class="px-5 py-2 rounded-lg bg-gray-300 dark:bg-neutral-light dark:text-neutral-dark 
-               hover:bg-gray-400 dark:hover:bg-neutral-mid transition">
-        Cancel
-      </button>
+        class="px-6 py-2 rounded-lg bg-gray-300 dark:bg-neutral-light dark:text-neutral-dark hover:bg-gray-400 dark:hover:bg-neutral-mid transition">Cancel</button>
       <button type="submit"
-        class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-blue-600 transition shadow-md">
-        Save Job
-      </button>
+        class="px-6 py-2 rounded-lg bg-primary text-white hover:bg-blue-600 transition shadow-md">Save Job</button>
     </div>
+
   </form>
 </div>
+
 
 
 <div id="jobs-container">
@@ -255,6 +289,6 @@
   
 
   <!-- Custom JS -->
-  <script src="script.js"></script>
+  <script src="./admin-add-job.js"></script>
 </body>
 </html>

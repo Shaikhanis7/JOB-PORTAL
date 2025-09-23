@@ -1,63 +1,16 @@
-feather.replace();
-
-// Password toggle
+// Toggle password visibility
 document.querySelectorAll(".toggle-password").forEach(icon => {
   icon.addEventListener("click", () => {
     const targetId = icon.getAttribute("data-target");
     const input = document.getElementById(targetId);
-    if (input.type === "password") {
-      input.type = "text";
-      icon.dataset.icon = "eye-off";
-    } else {
-      input.type = "password";
-      icon.dataset.icon = "eye";
-    }
-    feather.replace();
+    if (!input) return;
+    input.type = input.type === "password" ? "text" : "password";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
   });
 });
 
-// Dark mode toggle
-function toggleDarkMode() {
-  document.documentElement.classList.toggle("dark");
-  localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
-}
-const darkToggle = document.getElementById("dark-toggle");
-if (localStorage.getItem("theme") === "dark") document.documentElement.classList.add("dark");
-darkToggle.addEventListener("click", toggleDarkMode);
-
-// Hamburger Menu Toggle
-const hamburger = document.getElementById("hamburger");
-const mobileMenu = document.getElementById("mobile-menu");
-const mobileMenuContent = document.getElementById("mobile-menu-content");
-const closeMenu = document.getElementById("close-menu");
-
-// Open menu
-hamburger.addEventListener("click", () => {
-  mobileMenu.classList.remove("opacity-0", "pointer-events-none");
-  mobileMenu.classList.add("opacity-100", "pointer-events-auto");
-  mobileMenuContent.classList.remove("-translate-x-full");
-  mobileMenuContent.classList.add("translate-x-0");
-});
-
-// Close menu
-closeMenu.addEventListener("click", () => {
-  mobileMenu.classList.add("opacity-0", "pointer-events-none");
-  mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
-  mobileMenuContent.classList.add("-translate-x-full");
-  mobileMenuContent.classList.remove("translate-x-0");
-});
-
-// Close menu when clicking overlay
-mobileMenu.addEventListener("click", (e) => {
-  if (e.target === mobileMenu) {
-    mobileMenu.classList.add("opacity-0", "pointer-events-none");
-    mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
-    mobileMenuContent.classList.add("-translate-x-full");
-    mobileMenuContent.classList.remove("translate-x-0");
-  }
-});
-
-//Form Handling
+// Form Handling
 const form = document.getElementById("signup-form");
 const fields = {
   fullName: document.getElementById("fullName"),
@@ -72,7 +25,7 @@ const errors = {
   confirm: document.getElementById("error-confirm"),
 };
 
-// ✅ Notyf instance
+// Notyf instance
 const notyf = new Notyf({
   duration: 3000,
   position: { x: "right", y: "top" },
@@ -115,8 +68,14 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  // ✅ Check if user with this email already exists
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+  // Check if user with this email already exists
+  let users = [];
+  try {
+    users = JSON.parse(localStorage.getItem("users")) || [];
+  } catch (err) {
+    users = [];
+  }
+
   const emailExists = users.some((u) => u.email === fields.email.value.trim());
 
   if (emailExists) {
@@ -133,12 +92,10 @@ form.addEventListener("submit", (e) => {
     role: "user",
   };
 
-  // Save to users array in localStorage
+  // Save to localStorage
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
 
   notyf.success("🎉 Account created successfully!");
-
   form.reset();
 });
-

@@ -17,16 +17,257 @@ const addJobBtn = document.getElementById("add-job-btn");
 
 let currentFilterStatus = "all";
 
+if(!JSON.parse(localStorage.getItem("jobCategories")) && !JSON.parse(localStorage.getItem("jobLocations")))
+{
+
+ 
+const jobCategories = [
+  "Engineering",
+  "Design",
+  "Marketing",
+  "Sales",
+  "Content"
+];
+
+// Locations from jobs
+const jobLocations = [
+  "Chennai",
+  "Bangalore",
+  "Mumbai",
+  "Hyderabad",
+  "Pune",
+  "Delhi",
+  "Kolkata"
+];
+
+// Store in localStorage
+localStorage.setItem("jobCategories", JSON.stringify(jobCategories));
+localStorage.setItem("jobLocations", JSON.stringify(jobLocations));
+
+}
+
+
 // ==========================
 // Sample Jobs (for testing)
 // ==========================
-if(!localStorage.getItem("jobs")) {
-  const sampleJobs = [
-    { id:"1", title:"Frontend Developer", location:"NY", jobType:"Full-Time", skills:["React","JS"], positions:3, createdAt:new Date().toISOString(), closedAt:null, description:"Build UI", responsibilities:"Develop features", experience:"2+ yrs", rounds:["HR","Tech"] },
-    { id:"2", title:"Backend Developer", location:"LA", jobType:"Part-Time", skills:["Node","Express"], positions:2, createdAt:new Date().toISOString(), closedAt:null, description:"Server-side APIs", responsibilities:"Build API", experience:"3+ yrs", rounds:["Tech"] },
-    { id:"3", title:"Data Scientist", location:"NY", jobType:"Full-Time", skills:["Python","ML"], positions:1, createdAt:new Date().toISOString(), closedAt:new Date().toISOString(), description:"Analyze data", responsibilities:"Modeling", experience:"4+ yrs", rounds:["HR","Tech","Manager"] }
-  ];
-  localStorage.setItem("jobs", JSON.stringify(sampleJobs));
+let jobs=JSON.parse(localStorage.getItem("jobs"));
+
+if(!JSON.parse(localStorage.getItem("rounds")) )
+{
+    const rounds = [
+  { roundId: "round1", roundName: "Resume Screening", sequence: 1 },
+  { roundId: "round2", roundName: "Coding Test", sequence: 2 },
+  { roundId: "round3", roundName: "Technical Interview", sequence: 3 },
+  { roundId: "round4", roundName: "HR Interview", sequence: 4 },
+
+  { roundId: "round5", roundName: "Portfolio Review", sequence: 1 },
+  { roundId: "round6", roundName: "Design Challenge", sequence: 2 },
+  { roundId: "round7", roundName: "Final HR Interview", sequence: 3 },
+
+  { roundId: "round8", roundName: "Resume Screening", sequence: 1 },
+  { roundId: "round9", roundName: "Case Study Presentation", sequence: 2 },
+  { roundId: "round10", roundName: "Managerial Round", sequence: 3 },
+
+  { roundId: "round11", roundName: "Aptitude Test", sequence: 1 },
+  { roundId: "round12", roundName: "Sales Pitch Simulation", sequence: 2 },
+  { roundId: "round13", roundName: "HR Interview", sequence: 3 },
+
+  { roundId: "round14", roundName: "Coding Challenge", sequence: 1 },
+  { roundId: "round15", roundName: "System Design", sequence: 2 },
+  { roundId: "round16", roundName: "Technical Interview", sequence: 3 },
+  { roundId: "round17", roundName: "HR Interview", sequence: 4 },
+
+  { roundId: "round18", roundName: "Portfolio Review", sequence: 1 },
+  { roundId: "round19", roundName: "Creative Task", sequence: 2 },
+  { roundId: "round20", roundName: "Final HR Interview", sequence: 3 },
+
+  { roundId: "round21", roundName: "Writing Assignment", sequence: 1 },
+  { roundId: "round22", roundName: "Editorial Round", sequence: 2 },
+
+  { roundId: "round23", roundName: "Team Leadership Assessment", sequence: 1 },
+  { roundId: "round24", roundName: "Strategy Discussion", sequence: 2 },
+  { roundId: "round25", roundName: "HR Interview", sequence: 3 },
+
+  { roundId: "round26", roundName: "Resume Screening", sequence: 1 },
+  { roundId: "round27", roundName: "Frontend Coding Test", sequence: 2 },
+  { roundId: "round28", roundName: "System Design Interview", sequence: 3 },
+  { roundId: "round29", roundName: "HR Interview", sequence: 4 },
+
+  { roundId: "round30", roundName: "Portfolio Review", sequence: 1 },
+  { roundId: "round31", roundName: "Product Design Challenge", sequence: 2 },
+  { roundId: "round32", roundName: "Final HR Interview", sequence: 3 }
+];
+ 
+localStorage.setItem("rounds", JSON.stringify(rounds));
+ 
+}
+if(!jobs) 
+{
+  jobs = [
+  {
+    id: "job1",
+    title: "Full Stack Developer",
+    description: "Develop and maintain web applications",
+    category: "Engineering",
+    skills: ["Java", "React", "SQL"],
+    responsibilities: "Build, test, and deploy applications",
+    location: "Chennai",
+    jobType: "Full-time",
+    rounds: ["round1", "round2", "round3", "round4"],
+    positions: 2,
+    experience: 2,
+    createdAt: "2025-09-22T09:04:17.566Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job2",
+    title: "UI/UX Designer",
+    description: "Design user interfaces and user experiences",
+    category: "Design",
+    skills: ["Figma", "Adobe XD", "Creativity"],
+    responsibilities: "Create wireframes, prototypes, and mockups",
+    location: "Bangalore",
+    jobType: "Full-time",
+    rounds: ["round5", "round6", "round7"],
+    positions: 1,
+    experience: 1,
+    createdAt: "2025-09-22T09:10:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job3",
+    title: "Digital Marketing Specialist",
+    description: "Manage online marketing campaigns",
+    category: "Marketing",
+    skills: ["SEO", "Google Ads", "Analytics"],
+    responsibilities: "Optimize campaigns and analyze metrics",
+    location: "Mumbai",
+    jobType: "Full-time",
+    rounds: ["round8", "round9", "round10"],
+    positions: 1,
+    experience: 2,
+    createdAt: "2025-09-22T09:15:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job4",
+    title: "Sales Executive",
+    description: "Drive sales and maintain client relationships",
+    category: "Sales",
+    skills: ["CRM", "Communication", "Negotiation"],
+    responsibilities: "Generate leads and close deals",
+    location: "Hyderabad",
+    jobType: "Full-time",
+    rounds: ["round11", "round12", "round13"],
+    positions: 3,
+    experience: 1,
+    createdAt: "2025-09-22T09:20:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job5",
+    title: "Backend Developer",
+    description: "Develop and maintain server-side logic",
+    category: "Engineering",
+    skills: ["Node.js", "Express", "MongoDB"],
+    responsibilities: "Build APIs and manage databases",
+    location: "Pune",
+    jobType: "Full-time",
+    rounds: ["round14", "round15", "round16", "round17"],
+    positions: 2,
+    experience: 3,
+    createdAt: "2025-09-22T09:25:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job6",
+    title: "Graphic Designer",
+    description: "Create visual content for digital platforms",
+    category: "Design",
+    skills: ["Photoshop", "Illustrator", "Creativity"],
+    responsibilities: "Design banners, posters, and social media content",
+    location: "Chennai",
+    jobType: "Part-time",
+    rounds: ["round18", "round19", "round20"],
+    positions: 1,
+    experience: 1,
+    createdAt: "2025-09-22T09:30:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job7",
+    title: "Content Writer",
+    description: "Create engaging content for blogs and websites",
+    category: "Content",
+    skills: ["Writing", "SEO", "Creativity"],
+    responsibilities: "Produce articles, blogs, and web content",
+    location: "Delhi",
+    jobType: "Full-time",
+    rounds: ["round21", "round22"],
+    positions: 1,
+    experience: 1,
+    createdAt: "2025-09-22T09:35:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job8",
+    title: "Sales Manager",
+    description: "Lead sales team and strategy",
+    category: "Sales",
+    skills: ["Leadership", "CRM", "Strategy"],
+    responsibilities: "Manage team and achieve sales targets",
+    location: "Bangalore",
+    jobType: "Full-time",
+    rounds: ["round23", "round24", "round25"],
+    positions: 1,
+    experience: 4,
+    createdAt: "2025-09-22T09:40:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job9",
+    title: "Frontend Developer",
+    description: "Develop interactive web interfaces",
+    category: "Engineering",
+    skills: ["React", "JavaScript", "CSS"],
+    responsibilities: "Build UI components and ensure responsiveness",
+    location: "Kolkata",
+    jobType: "Full-time",
+    rounds: ["round26", "round27", "round28", "round29"],
+    positions: 2,
+    experience: 2,
+    createdAt: "2025-09-22T09:45:00.000Z",
+    closedAt: null,
+    applications: []
+  },
+  {
+    id: "job10",
+    title: "Product Designer",
+    description: "Design and prototype product features",
+    category: "Design",
+    skills: ["Figma", "Sketch", "User Research"],
+    responsibilities: "Collaborate with engineers and PMs for product design",
+    location: "Mumbai",
+    jobType: "Full-time",
+    rounds: ["round30", "round31", "round32"],
+    positions: 1,
+    experience: 3,
+    createdAt: "2025-09-22T09:50:00.000Z",
+    closedAt: null,
+    applications: []
+  }
+];
+
+
+localStorage.setItem("jobs", JSON.stringify(jobs));
 }
 
 // ==========================
@@ -85,53 +326,65 @@ function renderJobs(jobsToRender = null) {
     card.className =
       "bg-white dark:bg-neutral-dark rounded-xl shadow-md hover:shadow-xl transition-all overflow-hidden transform hover:-translate-y-1 my-4";
 
-    card.innerHTML = `
-      <div class="flex flex-col md:flex-row py-2">
-        <div class="flex-1 p-5 cursor-pointer transition-colors duration-300">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-3">
-              <h2 class="text-xl font-semibold text-primary">${job.title}</h2>
-              <span class="text-sm font-medium ${job.closedAt ? "text-red-500" : "text-green-500"}">
-                ${statusText}
-              </span>
-            </div>
-            <i class="fa-solid fa-chevron-down chevron text-gray-500 transition-transform duration-300"></i>
-          </div>
-          <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-300">
-            <span><i class="fa-solid fa-location-dot"></i> ${job.location}</span>
-            <span><i class="fa-solid fa-briefcase"></i> ${job.jobType}</span>
-            <span><i class="fa-regular fa-clock"></i> ${timeAgo(job.createdAt)}</span>
-            <span><i class="fa-solid fa-users"></i> ${job.positions} pos</span>
-          </div>
-          <div class="flex flex-wrap gap-2 mt-2">${skillTags}</div>
-          <div class="flex flex-wrap gap-6 text-xs text-gray-500 dark:text-gray-300 mt-2">
-            <span>Experience: ${job.experience || "-"}</span>
-            <span>Rounds: ${job.rounds?.length || "-"}</span>
-          </div>
-          <div class="job-details max-h-0 overflow-hidden transition-all duration-500 mt-4 space-y-3 text-sm text-gray-700 dark:text-gray-200">
-            <div>
-              <h4 class="font-semibold">Description</h4>
-              <p>${job.description || "Not provided"}</p>
-            </div>
-            <div>
-              <h4 class="font-semibold">Responsibilities</h4>
-              <p>${job.responsibilities || "Not provided"}</p>
-            </div>
-          </div>
+  card.innerHTML = `
+  <div class="flex flex-col md:flex-row py-2">
+    <div class="flex-1 p-5 cursor-pointer transition-colors duration-300">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <h2 class="text-xl font-semibold text-primary">${job.title}</h2>
+          <span class="text-sm font-medium ${job.closedAt ? "text-red-500" : "text-green-500"}">
+            ${statusText}
+          </span>
         </div>
-        <div class="w-full md:w-24 flex flex-row md:flex-col gap-3 p-0 justify-start md:justify-center items-center px-3">
-          <button class="edit-job bg-primary dark:bg-secondary p-3 rounded-lg hover:scale-105 transition text-white shadow-md" data-id="${job.id}">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </button>
-          <button class="toggle-job bg-gray-100 dark:bg-neutral-mid p-3 rounded-lg hover:scale-105 transition ${job.closedAt ? "text-red-500" : "text-green-500"} shadow-md" data-id="${job.id}">
-            <i class="fa-solid ${toggleIcon}"></i>
-          </button>
-          <button class="delete-job bg-red-600 dark:bg-red-700 p-3 rounded-lg hover:scale-105 transition text-white shadow-md" data-id="${job.id}">
-            <i class="fa-solid fa-trash"></i>
-          </button>
+        <i class="fa-solid fa-chevron-down chevron text-gray-500 transition-transform duration-300"></i>
+      </div>
+
+      <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-300 mb-2">
+        <span><i class="fa-solid fa-location-dot"></i> ${job.location}</span>
+        <span><i class="fa-solid fa-briefcase"></i> ${job.jobType}</span>
+        <span><i class="fa-regular fa-clock"></i> ${timeAgo(job.createdAt)}</span>
+        <span><i class="fa-solid fa-users"></i> ${job.positions} pos</span>
+      </div>
+
+      <div class="flex flex-wrap gap-2 mt-2">${skillTags}</div>
+
+      <!-- Experience & Rounds with icons -->
+      <div class="flex flex-wrap gap-6 text-gray-700 dark:text-gray-300 mt-3 text-sm md:text-base ">
+        <span class="flex items-center gap-1">
+       Experience: ${job.experience || "-"}
+        </span>
+        <span class="flex items-center gap-1">
+          Rounds: ${job.rounds?.length || "-"}
+        </span>
+      </div>
+
+      <!-- Improved Job Details -->
+      <div class="job-details max-h-0 overflow-hidden transition-all duration-500 mt-4 space-y-5 text-sm md:text-base text-gray-700 dark:text-gray-200">
+        <div class="pb-2 border-b border-gray-200 dark:border-neutral-mid">
+          <h4 class="font-semibold text-base text-primary dark:text-secondary mb-1">Description</h4>
+          <p class="leading-relaxed text-gray-600 dark:text-gray-300">${job.description || "Not provided"}</p>
+        </div>
+        <div class="pt-2">
+          <h4 class="font-semibold text-base text-primary dark:text-secondary mb-1">Responsibilities</h4>
+          <p class="leading-relaxed text-gray-600 dark:text-gray-300">${job.responsibilities || "Not provided"}</p>
         </div>
       </div>
-    `;
+    </div>
+
+    <div class="w-full md:w-24 flex flex-row md:flex-col gap-3 p-0 justify-start md:justify-center items-center px-3">
+      <button class="edit-job bg-primary dark:bg-secondary p-3 rounded-lg hover:scale-105 transition text-white shadow-md" data-id="${job.id}">
+        <i class="fa-solid fa-pen-to-square"></i>
+      </button>
+      <button class="toggle-job bg-gray-100 dark:bg-neutral-mid p-3 rounded-lg hover:scale-105 transition ${job.closedAt ? "text-red-500" : "text-green-500"} shadow-md" data-id="${job.id}">
+        <i class="fa-solid ${toggleIcon}"></i>
+      </button>
+      <button class="delete-job bg-red-600 dark:bg-red-700 p-3 rounded-lg hover:scale-105 transition text-white shadow-md" data-id="${job.id}">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+  </div>
+`;
+
 
     jobsContainer.appendChild(card);
 
